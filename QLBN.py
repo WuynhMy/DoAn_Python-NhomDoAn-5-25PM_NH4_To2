@@ -1,55 +1,55 @@
 import tkinter as tk 
 from tkinter import ttk, messagebox 
 from tkcalendar import DateEntry 
-import mysql.connector 
- 
-# ====== Kết nối MySQL ====== 
-def connect_db(): 
-    return mysql.connector.connect( 
-        host="localhost", 
-        user="root",        # thay bằng user MySQL của bạn 
-        password="2703",        # thay bằng password MySQL của bạn 
-        database="QLBN" 
-    ) 
-# ====== Hàm canh giữa cửa sổ ====== 
-def center_window(win, w=700, h=500): 
-    ws = win.winfo_screenwidth() 
-    hs = win.winfo_screenheight() 
-    x = (ws // 2) - (w // 2) 
-    y = (hs // 2) - (h // 2) 
-    win.geometry(f'{w}x{h}+{x}+{y}') 
- 
-# ====== Cửa sổ chính ====== 
-root = tk.Tk() 
-root.title("Quản lý nhân viên") 
-center_window(root, 700, 500) 
-root.resizable(False, False) 
- 
-# ====== Tiêu đề ====== 
-lbl_title = tk.Label(root, text="QUẢN LÝ NHÂN VIÊN", font=("Arial", 18, "bold")) 
-lbl_title.pack(pady=10) 
- 
-# ====== Frame nhập thông tin ====== 
-frame_info = tk.Frame(root) 
-frame_info.pack(pady=5, padx=10, fill="x") 
- 
-tk.Label(frame_info, text="Mã số").grid(row=0, column=0, padx=5, pady=5, 
-sticky="w") 
-entry_maso = tk.Entry(frame_info, width=10) 
-entry_maso.grid(row=0, column=1, padx=5, pady=5, sticky="w") 
 
-tk.Label(frame_info, text="Mã phòng").grid(row=0, column=2, padx=5, pady=5, 
-sticky="w") 
-entry_maphong = tk.Entry(frame_info, width=10) 
-entry_maphong.grid(row=0, column=1, padx=5, pady=5, sticky="w") 
+root = tk.Tk()
+root.title("Quản lý bệnh nhân")
+root.geometry("750x550")
+root.resizable(False, False)
 
- 
-tk.Label(frame_info, text="Họ lót").grid(row=1, column=0, padx=5, pady=5, 
-sticky="w") 
-entry_holot = tk.Entry(frame_info, width=25) 
-entry_holot.grid(row=1, column=1, padx=5, pady=5, sticky="w") 
- 
-tk.Label(frame_info, text="Tên").grid(row=1, column=2, padx=5, pady=5, sticky="w") 
-entry_ten = tk.Entry(frame_info, width=15) 
-entry_ten.grid(row=1, column=3, padx=5, pady=5, sticky="w")
+tk.Label(root, text="QUẢN LÝ BỆNH NHÂN", font=("Arial", 18, "bold")).grid(row=0, column=0, columnspan=4, pady=15)
+
+# ===== HÀNG 1 =====
+tk.Label(root, text="Mã số:").grid(row=1, column=0, sticky="e", padx=5, pady=5)
+tk.Entry(root, width=20).grid(row=1, column=1, sticky="w", padx=5)
+
+tk.Label(root, text="Mã phòng:").grid(row=1, column=2, sticky="e", padx=5, pady=5)
+tk.Entry(root, width=20).grid(row=1, column=3, sticky="w", padx=5)
+
+# ===== HÀNG 2 =====
+tk.Label(root, text="Họ lót:").grid(row=2, column=0, sticky="e", padx=5, pady=5)
+tk.Entry(root, width=20).grid(row=2, column=1, sticky="w", padx=5)
+
+tk.Label(root, text="Tên:").grid(row=2, column=2, sticky="e", padx=5, pady=5)
+tk.Entry(root, width=20).grid(row=2, column=3, sticky="w", padx=5)
+
+# ===== HÀNG 3 =====
+tk.Label(root, text="Phái:").grid(row=3, column=0, sticky="e", padx=5)
+tk.Radiobutton(root, text="Nam", value="Nam").grid(row=3, column=1, sticky="w")
+tk.Radiobutton(root, text="Nữ", value="Nữ").grid(row=3, column=1, sticky="e")
+
+# ===== HÀNG 4 =====
+tk.Label(root, text="Ngày sinh:").grid(row=3, column=2, sticky="e", padx=5)
+DateEntry(root, width=17, date_pattern='yyyy-mm-dd').grid(row=3, column=3, sticky="w")
+
+# ===== HÀNG 5 =====
+tk.Label(root, text="Loại bệnh nhân:").grid(row=5, column=0, sticky="e", padx=5, pady=5)
+tk.Radiobutton(root, text="Nội trú", value="NoiTru").grid(row=5, column=1, sticky="w")
+tk.Radiobutton(root, text="Ngoại trú", value="NgoaiTru").grid(row=5, column=2, sticky="w")
+
+# Canh đều cột
+for i in range(4):
+    root.columnconfigure(i, weight=1)
+
+# ===== Notebook dùng GRID ====
+notebook = ttk.Notebook(root)
+notebook.grid(row=6, column=0, columnspan=4, sticky="nsew")
+
+notebook.add(ttk.Frame(notebook), text="Bệnh nhân")
+notebook.add(ttk.Frame(notebook), text="Bác sĩ")
+notebook.add(ttk.Frame(notebook), text="Phòng bệnh")
+notebook.add(ttk.Frame(notebook), text="Phiếu khám")
+notebook.add(ttk.Frame(notebook), text="Thuốc")
+notebook.add(ttk.Frame(notebook), text="Toa thuốc")
+
 root.mainloop()

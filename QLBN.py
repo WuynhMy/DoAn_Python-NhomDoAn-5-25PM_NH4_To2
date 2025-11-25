@@ -4,7 +4,7 @@ from tkcalendar import DateEntry
 
 root = tk.Tk()
 root.title("Quản lý bệnh nhân")
-root.geometry("750x550")
+root.geometry("850x650")
 root.resizable(False, False)
 
 tk.Label(root, text="QUẢN LÝ BỆNH NHÂN", font=("Arial", 18, "bold")).grid(row=0, column=0, columnspan=4, pady=15)
@@ -51,5 +51,49 @@ notebook.add(ttk.Frame(notebook), text="Phòng bệnh")
 notebook.add(ttk.Frame(notebook), text="Phiếu khám")
 notebook.add(ttk.Frame(notebook), text="Thuốc")
 notebook.add(ttk.Frame(notebook), text="Toa thuốc")
+
+tab_benhnhan = ttk.Frame(notebook, padding=10)
+tab_bacsi = ttk.Frame(notebook, padding=10)
+tab_phong = ttk.Frame(notebook, padding=10)
+tab_phieukham = ttk.Frame(notebook, padding=10)
+tab_thuoc = ttk.Frame(notebook, padding=10)
+tab_toathuoc = ttk.Frame(notebook, padding=10)  
+
+frame_table = ttk.LabelFrame(tab_benhnhan, text="Danh sách bệnh nhân", padding=10)
+frame_table.pack(expand=True, fill="both")
+
+# Lấy tab bệnh nhân từ Notebook
+tab_benhnhan = notebook.tabs()  # lấy danh sách tab
+tab_benhnhan = notebook.nametowidget(tab_benhnhan[0])  # lấy tab đầu tiên "Bệnh nhân"
+
+# ===== KHUNG TABLE =====
+frame_table = ttk.LabelFrame(tab_benhnhan, text="Danh sách bệnh nhân", padding=10)
+frame_table.pack(fill="both", expand=True, padx=10, pady=10)
+
+# Tạo bảng Treeview
+columns = ("MaBN", "HoLot", "Ten", "Phai", "NgaySinh", "LoaiBN")
+tree = ttk.Treeview(frame_table, columns=columns, show="headings", height=12)
+
+for col in columns:
+    tree.heading(col, text=col)
+    tree.column(col, width=100)
+
+tree.pack(fill="both", expand=True)
+
+# ===== KHUNG NÚT =====
+frame_buttons = tk.Frame(tab_benhnhan)
+frame_buttons.pack(pady=10)
+
+btn_add = tk.Button(frame_buttons, text="Thêm", width=12, bg="#d1ffd1")
+btn_add.grid(row=0, column=0, padx=5)
+
+btn_update = tk.Button(frame_buttons, text="Sửa", width=12, bg="#fff5cc")
+btn_update.grid(row=0, column=1, padx=5)
+
+btn_delete = tk.Button(frame_buttons, text="Xóa", width=12, bg="#ffd6d6")
+btn_delete.grid(row=0, column=2, padx=5)
+
+btn_clear = tk.Button(frame_buttons, text="Làm mới", width=12)
+btn_clear.grid(row=0, column=3, padx=5)
 
 root.mainloop()

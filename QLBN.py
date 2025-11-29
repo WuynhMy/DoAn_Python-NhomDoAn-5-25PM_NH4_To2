@@ -12,7 +12,6 @@ root.configure(bg="#EBF5FB")
 style = ttk.Style()
 style.theme_use("clam")
 
-# Font mặc định
 style.configure("TLabel", font=("Segoe UI", 12))
 style.configure("TEntry", font=("Segoe UI", 12))
 style.configure("TButton", font=("Segoe UI", 12))
@@ -25,19 +24,28 @@ tk.Label(root,
          fg="#1B4F72",
          bg="#EBF5FB").pack(pady=20)
 
+# ============= NOTEBOOK =============
+notebook = ttk.Notebook(root)
+notebook.pack(fill="both", expand=True, padx=20, pady=10)
+
+tab_bn = ttk.Frame(notebook)
+notebook.add(tab_bn, text="Bệnh Nhân")
+tab_phongbenh=ttk.Frame(notebook)
+notebook.add(tab_phongbenh,text="Phòng Bệnh")
+
 # ===== FRAME THÔNG TIN =====
-frame_info = tk.LabelFrame(root, text="THÔNG TIN BỆNH NHÂN",
+frame_info = tk.LabelFrame(tab_bn, text="THÔNG TIN BỆNH NHÂN",
                            bg="#EBF5FB", fg="#1B4F72",
                            font=("Arial", 14, "bold"),
                            padx=15, pady=15)
 frame_info.pack(fill="x", padx=20)
 
-# ============= CỘT TRÁI =============
+# Cột trái
 left_col = tk.Frame(frame_info, bg="#EBF5FB")
 left_col.grid(row=0, column=0, padx=20)
 
 tk.Label(left_col, text="Mã số:", bg="#EBF5FB").pack(anchor="w")
-entry_maso = tk.Entry(left_col, width=30, font=("Segoe UI", 12))
+entry_maso = tk.Entry(left_col, width=30)
 entry_maso.pack(anchor="w", pady=5)
 
 tk.Label(left_col, text="Họ lót:", bg="#EBF5FB").pack(anchor="w")
@@ -49,7 +57,7 @@ gender_var = tk.StringVar(value="Nam")
 tk.Radiobutton(left_col, text="Nam", variable=gender_var, value="Nam", bg="#EBF5FB").pack(anchor="w")
 tk.Radiobutton(left_col, text="Nữ", variable=gender_var, value="Nữ", bg="#EBF5FB").pack(anchor="w")
 
-# ============= CỘT PHẢI =============
+# Cột phải
 right_col = tk.Frame(frame_info, bg="#EBF5FB")
 right_col.grid(row=0, column=1, padx=20)
 
@@ -62,23 +70,15 @@ entry_ten = tk.Entry(right_col, width=30)
 entry_ten.pack(anchor="w", pady=5)
 
 tk.Label(right_col, text="Ngày sinh:", bg="#EBF5FB").pack(anchor="w")
-entry_ngaysinh = DateEntry(right_col, width=27, date_pattern='yyyy-mm-dd')
+entry_ngaysinh = DateEntry(right_col, width=27, date_pattern="yyyy-mm-dd")
 entry_ngaysinh.pack(anchor="w", pady=5)
 
-# Loại bệnh nhân
 tk.Label(frame_info, text="Loại bệnh nhân:", bg="#EBF5FB").grid(row=1, column=0, sticky="w", pady=10)
 type_var = tk.StringVar(value="NoiTru")
 tk.Radiobutton(frame_info, text="Nội trú", variable=type_var, value="NoiTru", bg="#EBF5FB").grid(row=1, column=0, sticky="e")
 tk.Radiobutton(frame_info, text="Ngoại trú", variable=type_var, value="NgoaiTru", bg="#EBF5FB").grid(row=1, column=1, sticky="w")
 
-# ============= NOTEBOOK =============
-notebook = ttk.Notebook(root)
-notebook.pack(fill="both", expand=True, padx=20, pady=10)
-
-tab_bn = ttk.Frame(notebook)
-notebook.add(tab_bn, text="Bệnh nhân")
-
-# ============= BẢNG BỆNH NHÂN =============
+# ===== BẢNG =====
 frame_table = tk.LabelFrame(tab_bn, text="DANH SÁCH BỆNH NHÂN",
                             bg="#EBF5FB", fg="#1B4F72",
                             font=("Arial", 14, "bold"),
@@ -94,7 +94,7 @@ for col in columns:
 
 tree.pack(fill="both", expand=True)
 
-# ============= NÚT CHỨC NĂNG =============
+# ===== NÚT =====
 btn_frame = tk.Frame(tab_bn, bg="#EBF5FB")
 btn_frame.pack(pady=10)
 
@@ -112,4 +112,37 @@ btn_update.grid(row=0, column=1, padx=12)
 btn_delete.grid(row=0, column=2, padx=12)
 btn_clear.grid(row=0, column=3, padx=12)
 
+#Tab phòng khám
+frame_info = tk.LabelFrame(tab_phongbenh, text="DANH SÁCH PHÒNG BỆNH",
+                           bg="#EBF5FB", fg="#1B4F72",
+                           font=("Arial", 14, "bold"),
+                           padx=15, pady=15)
+frame_info.pack(fill="x", padx=20)
+
+tk.Label(frame_info, text="Mã phòng:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
+p_maphong = tk.Entry(frame_info, width=30)
+p_maphong.grid(row=0, column=1, pady=5)
+
+tk.Label(frame_info, text="Tên phòng:", bg="#EBF5FB").grid(row=1, column=0, sticky="w")
+p_tenphong = tk.Entry(frame_info, width=30)
+p_tenphong.grid(row=1, column=1, pady=5)
+
+tk.Label(frame_info, text="Số giường:", bg="#EBF5FB").grid(row=2, column=0, sticky="w")
+p_sogiuong = tk.Entry(frame_info, width=30)
+p_sogiuong.grid(row=2, column=1, pady=5)
+
+tk.Label(frame_info, text="Ghi chú:", bg="#EBF5FB").grid(row=3, column=0, sticky="w")
+p_note = tk.Entry(frame_info, width=30)
+p_note.grid(row=3, column=1, pady=5)
+
+Frame_table = tk.LabelFrame(tab_bn, text="DANH SÁCH PHÒNG BỆNH",
+                            bg="#EBF5FB", fg="#1B4F72",
+                            font=("Arial", 14, "bold"),
+                            padx=10, pady=10)
+frame_table.pack(fill="both", expand=True, padx=10, pady=10)
+
+columns_phong = ("MaPhong", "TenPhong", "SoGiuong", "GhiChu")
+tree = ttk.Treeview(frame_table, columns=columns, show="headings", height=12)
+
+tree.pack(fill="both", expand=True)
 root.mainloop()

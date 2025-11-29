@@ -32,6 +32,8 @@ tab_bn = ttk.Frame(notebook)
 notebook.add(tab_bn, text="Bệnh Nhân")
 tab_phongbenh=ttk.Frame(notebook)
 notebook.add(tab_phongbenh,text="Phòng Bệnh")
+tab_bacsi =ttk.Notebook(notebook)
+notebook.add(tab_bacsi, text="Bác Sĩ")
 
 # ===== FRAME THÔNG TIN =====
 frame_info = tk.LabelFrame(tab_bn, text="THÔNG TIN BỆNH NHÂN",
@@ -72,6 +74,10 @@ entry_ten.pack(anchor="w", pady=5)
 tk.Label(right_col, text="Ngày sinh:", bg="#EBF5FB").pack(anchor="w")
 entry_ngaysinh = DateEntry(right_col, width=27, date_pattern="yyyy-mm-dd")
 entry_ngaysinh.pack(anchor="w", pady=5)
+
+tk.Label(right_col, text="Địa Chỉ:", bg="#EBF5FB").pack(anchor="w")
+entry_diachi = tk.Entry(right_col, width=30)
+entry_diachi.pack(anchor="w", pady=0,padx=5)
 
 tk.Label(frame_info, text="Loại bệnh nhân:", bg="#EBF5FB").grid(row=1, column=0, sticky="w", pady=10)
 type_var = tk.StringVar(value="NoiTru")
@@ -146,7 +152,7 @@ frame_table = tk.LabelFrame(
 frame_table.pack(fill="both", expand=True, padx=10, pady=10)
 
 # --- BẢNG TREEVIEW ---
-columns_phong = ("MaPhong", "TenPhong", "SoGiuong", "GhiChu")
+columns_phong = ("Mã Phòng", "Tên Phòng", "Loại Phòng")
 
 tree = ttk.Treeview(frame_table, columns=columns_phong, show="headings", height=12)
 tree.pack(fill="both", expand=True)
@@ -154,5 +160,34 @@ tree.pack(fill="both", expand=True)
 for col in columns_phong:
     tree.heading(col, text=col)
     tree.column(col, width=150)
+#Tab bác sĩ
+#Frame thông tin
+frame_info = tk.LabelFrame(
+    tab_bacsi, text="THÔNG TIN BÁC SĨ",
+    bg="#EBF5FB", fg="#1B4F72",
+    font=("Arial", 14, "bold"),
+    padx=15, pady=15
+)
+frame_info.pack(fill="x", padx=20)
+
+tk.Label(frame_info, text="Mã bác sĩ:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
+p_bacsi = tk.Entry(frame_info, width=30)
+p_bacsi.grid(row=0, column=1, pady=5)
+
+tk.Label(frame_info, text="Họ Lót:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
+p_bacsi = tk.Entry(frame_info, width=30)
+p_bacsi.grid(row=1, column=1, pady=5)
+
+tk.Label(frame_info, text="Tên:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
+p_bacsi = tk.Entry(frame_info, width=30)
+p_bacsi.grid(row=2, column=1, pady=5)
+
+tk.Label(frame_info, text="Khoa Khám:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
+p_bacsi = tk.Entry(frame_info, width=30)
+p_bacsi.grid(row=0, column=1, pady=5)
+
+tk.Label(frame_info, text="Địa Chỉ:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
+p_bacsi = tk.Entry(frame_info, width=30)
+p_bacsi.grid(row=0, column=1, pady=5)
 
 root.mainloop()

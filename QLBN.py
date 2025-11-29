@@ -2,6 +2,15 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from tkcalendar import DateEntry
 
+# ====== Kết nối MySQL ====== 
+def connect_db(): 
+    return mysql.connector.connect( 
+        host="localhost", 
+        user="QLBenhNhan",        # thay bằng user MySQL của bạn 
+        password="Quanlybenhnhan12345",        # thay bằng password MySQL của bạn 
+        database="QLBN" 
+    )
+
 root = tk.Tk()
 root.title("Quản lý bệnh nhân")
 root.geometry("900x700")
@@ -158,5 +167,133 @@ def create_tab_bacsi(notebook):
 
 tab_bacsi = create_tab_bacsi(notebook)
 notebook.add(tab_bacsi, text="Bác sĩ")
+
+# TAB THUỐC
+# Frame nhập liệu
+frame_input_thuoc = ttk.LabelFrame(tab_thuoc, text="Thông tin thuốc", padding=10)
+frame_input_thuoc.pack(fill="x", pady=10)
+
+ttk.Label(frame_input_thuoc, text="Mã thuốc:").grid(row=0, column=0, pady=5)
+ttk.Label(frame_input_thuoc, text="Tên thuốc:").grid(row=1, column=0, pady=5)
+ttk.Label(frame_input_thuoc, text="Đơn giá:").grid(row=2, column=0, pady=5)
+
+entry_ma_thuoc = ttk.Entry(frame_input_thuoc)
+entry_ten_thuoc = ttk.Entry(frame_input_thuoc)
+entry_gia_thuoc = ttk.Entry(frame_input_thuoc)
+
+entry_ma_thuoc.grid(row=0, column=1, pady=5)
+entry_ten_thuoc.grid(row=1, column=1, pady=5)
+entry_gia_thuoc.grid(row=2, column=1, pady=5)
+
+# Bảng
+frame_table_thuoc = ttk.LabelFrame(tab_thuoc, text="Danh sách thuốc", padding=10)
+frame_table_thuoc.pack(fill="both", expand=True)
+
+tree_thuoc = ttk.Treeview(frame_table_thuoc, 
+    columns=("mathuoc", "tenthuoc", "gia"), show="headings")
+tree_thuoc.heading("mathuoc", text="Mã thuốc")
+tree_thuoc.heading("tenthuoc", text="Tên thuốc")
+tree_thuoc.heading("gia", text="Đơn giá")
+
+tree_thuoc.pack(fill="both", expand=True)
+
+# TAB PHÒNG BỆNH
+frame_input_phong = ttk.LabelFrame(tab_phong, text="Thông tin phòng bệnh", padding=10)
+frame_input_phong.pack(fill="x", pady=10)
+
+ttk.Label(frame_input_phong, text="Mã phòng:").grid(row=0, column=0, padx=5, pady=5)
+ttk.Label(frame_input_phong, text="Tên phòng:").grid(row=1, column=0, padx=5, pady=5)
+ttk.Label(frame_input_phong, text="Loại phòng:").grid(row=2, column=0, padx=5, pady=5)
+
+entry_ma_phong = ttk.Entry(frame_input_phong, width=25)
+entry_ten_phong = ttk.Entry(frame_input_phong, width=25)
+combo_loai_phong = ttk.Combobox(frame_input_phong, values=["Nội trú", "Ngoại trú"], width=22, state="readonly")
+
+entry_ma_phong.grid(row=0, column=1, pady=5)
+entry_ten_phong.grid(row=1, column=1, pady=5)
+combo_loai_phong.grid(row=2, column=1, pady=5)
+
+# Bảng
+frame_table_phong = ttk.LabelFrame(tab_phong, text="Danh sách phòng bệnh", padding=10)
+frame_table_phong.pack(fill="both", expand=True)
+
+columns_phong = ("MaPhong", "TenPhong", "LoaiPhong")
+tree_phong = ttk.Treeview(frame_table_phong, columns=columns_phong, show="headings")
+
+for col in columns_phong:
+    tree_phong.heading(col, text=col)
+    tree_phong.column(col, width=150)
+
+tree_phong.pack(fill="both", expand=True)
+
+# TAB PHIẾU KHÁM
+frame_input_pk = ttk.LabelFrame(tab_phieukham, text="Thông tin phiếu khám", padding=10)
+frame_input_pk.pack(fill="x", pady=10)
+
+ttk.Label(frame_input_pk, text="Mã PK:").grid(row=0, column=0, pady=5)
+ttk.Label(frame_input_pk, text="Mã BN:").grid(row=0, column=2, pady=5)
+ttk.Label(frame_input_pk, text="Mã BS:").grid(row=1, column=0, pady=5)
+ttk.Label(frame_input_pk, text="Ngày khám:").grid(row=1, column=2, pady=5)
+ttk.Label(frame_input_pk, text="Loại khám:").grid(row=2, column=0, pady=5)
+ttk.Label(frame_input_pk, text="Chẩn đoán:").grid(row=2, column=2, pady=5)
+
+entry_ma_pk = ttk.Entry(frame_input_pk, width=20)
+entry_ma_bn = ttk.Entry(frame_input_pk, width=20)
+entry_ma_bs = ttk.Entry(frame_input_pk, width=20)
+entry_ngaykham = DateEntry(frame_input_pk, width=18, date_pattern="yyyy-mm-dd")
+entry_loaikham = ttk.Entry(frame_input_pk, width=20)
+entry_chandoan = ttk.Entry(frame_input_pk, width=20)
+
+entry_ma_pk.grid(row=0, column=1, pady=5)
+entry_ma_bn.grid(row=0, column=3, pady=5)
+entry_ma_bs.grid(row=1, column=1, pady=5)
+entry_ngaykham.grid(row=1, column=3, pady=5)
+entry_loaikham.grid(row=2, column=1, pady=5)
+entry_chandoan.grid(row=2, column=3, pady=5)
+
+# Bảng
+frame_table_pk = ttk.LabelFrame(tab_phieukham, text="Danh sách phiếu khám", padding=10)
+frame_table_pk.pack(fill="both", expand=True)
+
+columns_pk = ("MaPK", "MaBN", "MaBS", "NgayKham", "LoaiKham", "ChanDoan")
+tree_pk = ttk.Treeview(frame_table_pk, columns=columns_pk, show="headings")
+
+for col in columns_pk:
+    tree_pk.heading(col, text=col)
+    tree_pk.column(col, width=120)
+
+tree_pk.pack(fill="both", expand=True)
+
+# TAB TOA THUỐC
+frame_input_toa = ttk.LabelFrame(tab_toathuoc, text="Chi tiết toa thuốc", padding=10)
+frame_input_toa.pack(fill="x", pady=10)
+
+ttk.Label(frame_input_toa, text="Mã PK:").grid(row=0, column=0, pady=5)
+ttk.Label(frame_input_toa, text="Mã thuốc:").grid(row=0, column=2, pady=5)
+ttk.Label(frame_input_toa, text="Số lượng:").grid(row=1, column=0, pady=5)
+ttk.Label(frame_input_toa, text="Liều dùng:").grid(row=1, column=2, pady=5)
+
+entry_ma_pk_toa = ttk.Entry(frame_input_toa, width=20)
+entry_ma_thuoc_toa = ttk.Entry(frame_input_toa, width=20)
+entry_soluong_toa = ttk.Entry(frame_input_toa, width=20)
+entry_lieudung_toa = ttk.Entry(frame_input_toa, width=20)
+
+entry_ma_pk_toa.grid(row=0, column=1, pady=5)
+entry_ma_thuoc_toa.grid(row=0, column=3, pady=5)
+entry_soluong_toa.grid(row=1, column=1, pady=5)
+entry_lieudung_toa.grid(row=1, column=3, pady=5)
+
+# Bảng
+frame_table_toa = ttk.LabelFrame(tab_toathuoc, text="Danh sách chi tiết toa thuốc", padding=10)
+frame_table_toa.pack(fill="both", expand=True)
+
+columns_toa = ("MaPK", "MaThuoc", "SoLuong", "LieuDung")
+tree_toa = ttk.Treeview(frame_table_toa, columns=columns_toa, show="headings")
+
+for col in columns_toa:
+    tree_toa.heading(col, text=col)
+    tree_toa.column(col, width=120)
+
+tree_toa.pack(fill="both", expand=True)
 
 root.mainloop()

@@ -113,10 +113,13 @@ btn_delete.grid(row=0, column=2, padx=12)
 btn_clear.grid(row=0, column=3, padx=12)
 
 #Tab phòng khám
-frame_info = tk.LabelFrame(tab_phongbenh, text="DANH SÁCH PHÒNG BỆNH",
-                           bg="#EBF5FB", fg="#1B4F72",
-                           font=("Arial", 14, "bold"),
-                           padx=15, pady=15)
+# --- Khung nhập liệu ---
+frame_info = tk.LabelFrame(
+    tab_phongbenh, text="THÔNG TIN PHÒNG BỆNH",
+    bg="#EBF5FB", fg="#1B4F72",
+    font=("Arial", 14, "bold"),
+    padx=15, pady=15
+)
 frame_info.pack(fill="x", padx=20)
 
 tk.Label(frame_info, text="Mã phòng:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
@@ -127,22 +130,29 @@ tk.Label(frame_info, text="Tên phòng:", bg="#EBF5FB").grid(row=1, column=0, st
 p_tenphong = tk.Entry(frame_info, width=30)
 p_tenphong.grid(row=1, column=1, pady=5)
 
-tk.Label(frame_info, text="Số giường:", bg="#EBF5FB").grid(row=2, column=0, sticky="w")
-p_sogiuong = tk.Entry(frame_info, width=30)
-p_sogiuong.grid(row=2, column=1, pady=5)
+tk.Label(frame_info, text="Loại phòng:", bg="#EBF5FB").grid(row=2, column=0, sticky="w")
+type_var = tk.StringVar(value="NoiTru")
+tk.Radiobutton(frame_info, text="Nội trú", variable=type_var, value="NoiTru", bg="#EBF5FB").grid(row=2, column=1, sticky="e")
+tk.Radiobutton(frame_info, text="Ngoại trú", variable=type_var, value="NgoaiTru", bg="#EBF5FB").grid(row=2, column=1, sticky="w")
 
-tk.Label(frame_info, text="Ghi chú:", bg="#EBF5FB").grid(row=3, column=0, sticky="w")
-p_note = tk.Entry(frame_info, width=30)
-p_note.grid(row=3, column=1, pady=5)
 
-Frame_table = tk.LabelFrame(tab_bn, text="DANH SÁCH PHÒNG BỆNH",
-                            bg="#EBF5FB", fg="#1B4F72",
-                            font=("Arial", 14, "bold"),
-                            padx=10, pady=10)
+# --- KHUNG BẢNG DƯỚI ---
+frame_table = tk.LabelFrame(
+    tab_phongbenh, text="Danh sách phòng bệnh",
+    bg="#EBF5FB", fg="#1B4F72",
+    font=("Arial", 14, "bold"),
+    padx=10, pady=10
+)
 frame_table.pack(fill="both", expand=True, padx=10, pady=10)
 
+# --- BẢNG TREEVIEW ---
 columns_phong = ("MaPhong", "TenPhong", "SoGiuong", "GhiChu")
-tree = ttk.Treeview(frame_table, columns=columns, show="headings", height=12)
 
+tree = ttk.Treeview(frame_table, columns=columns_phong, show="headings", height=12)
 tree.pack(fill="both", expand=True)
+
+for col in columns_phong:
+    tree.heading(col, text=col)
+    tree.column(col, width=150)
+
 root.mainloop()

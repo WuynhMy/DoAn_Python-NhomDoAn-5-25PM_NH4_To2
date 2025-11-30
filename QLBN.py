@@ -53,11 +53,11 @@ left_col = tk.Frame(frame_info, bg="#EBF5FB")
 left_col.grid(row=0, column=0, padx=20)
 
 tk.Label(left_col, text="Mã số:", bg="#EBF5FB").pack(anchor="w")
-entry_maso = tk.Entry(left_col, width=30)
+entry_maso = ttk.Entry(left_col, width=30)
 entry_maso.pack(anchor="w", pady=5)
 
 tk.Label(left_col, text="Họ lót:", bg="#EBF5FB").pack(anchor="w")
-entry_holot = tk.Entry(left_col, width=30)
+entry_holot = ttk.Entry(left_col, width=30)
 entry_holot.pack(anchor="w", pady=5)
 
 tk.Label(left_col, text="Phái:", bg="#EBF5FB").pack(anchor="w")
@@ -70,11 +70,11 @@ right_col = tk.Frame(frame_info, bg="#EBF5FB")
 right_col.grid(row=0, column=1, padx=20)
 
 tk.Label(right_col, text="Mã phòng:", bg="#EBF5FB").pack(anchor="w")
-entry_map = tk.Entry(right_col, width=30)
+entry_map = ttk.Entry(right_col, width=30)
 entry_map.pack(anchor="w", pady=5)
 
 tk.Label(right_col, text="Tên:", bg="#EBF5FB").pack(anchor="w")
-entry_ten = tk.Entry(right_col, width=30)
+entry_ten = ttk.Entry(right_col, width=30)
 entry_ten.pack(anchor="w", pady=5)
 
 tk.Label(right_col, text="Ngày sinh:", bg="#EBF5FB").pack(anchor="w")
@@ -82,7 +82,7 @@ entry_ngaysinh = DateEntry(right_col, width=27, date_pattern="yyyy-mm-dd")
 entry_ngaysinh.pack(anchor="w", pady=5)
 
 tk.Label(right_col, text="Địa Chỉ:", bg="#EBF5FB").pack(anchor="w")
-entry_diachi = tk.Entry(right_col, width=30)
+entry_diachi = ttk.Entry(right_col, width=30)
 entry_diachi.pack(anchor="w", pady=0,padx=5)
 
 tk.Label(frame_info, text="Loại bệnh nhân:", bg="#EBF5FB").grid(row=1, column=0, sticky="w", pady=10)
@@ -135,11 +135,11 @@ frame_info = tk.LabelFrame(
 frame_info.pack(fill="x", padx=20)
 
 tk.Label(frame_info, text="Mã phòng:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
-p_maphong = tk.Entry(frame_info, width=30)
+p_maphong = ttk.Entry(frame_info, width=30)
 p_maphong.grid(row=0, column=1, pady=5)
 
 tk.Label(frame_info, text="Tên phòng:", bg="#EBF5FB").grid(row=1, column=0, sticky="w")
-p_tenphong = tk.Entry(frame_info, width=30)
+p_tenphong = ttk.Entry(frame_info, width=30)
 p_tenphong.grid(row=1, column=1, pady=5)
 
 tk.Label(frame_info, text="Loại phòng:", bg="#EBF5FB").grid(row=2, column=0, sticky="w")
@@ -185,15 +185,15 @@ right_col.grid(row=0, column=1, padx=10, pady=5, sticky="nw")
 
 # ====== CỘT TRÁI ======
 tk.Label(left_col, text="Mã bác sĩ:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
-entry_mabs = tk.Entry(left_col, width=30)
+entry_mabs = ttk.Entry(left_col, width=30)
 entry_mabs.grid(row=0, column=1, pady=5)
 
 tk.Label(left_col, text="Họ lót:", bg="#EBF5FB").grid(row=1, column=0, sticky="w")
-entry_holot = tk.Entry(left_col, width=30)
+entry_holot = ttk.Entry(left_col, width=30)
 entry_holot.grid(row=1, column=1, pady=5)
 
 tk.Label(left_col, text="Tên:", bg="#EBF5FB").grid(row=2, column=0, sticky="w")
-entry_ten = tk.Entry(left_col, width=30)
+entry_ten = ttk.Entry(left_col, width=30)
 entry_ten.grid(row=2, column=1, pady=5)
 
 tk.Label(left_col, text="Khoa khám:", bg="#EBF5FB").grid(row=3, column=0, sticky="w")
@@ -216,7 +216,7 @@ combo_khoa.grid(row=3, column=1, pady=5)
 
 # ====== CỘT PHẢI ======
 tk.Label(right_col, text="Địa chỉ:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
-entry_diachi = tk.Entry(right_col, width=40)
+entry_diachi = ttk.Entry(right_col, width=40)
 entry_diachi.grid(row=1, column=0, pady=5, sticky="w")
 
 # --- KHUNG BẢNG DƯỚI ---
@@ -254,7 +254,7 @@ frame_info_pk.pack(fill="x", padx=20, pady=10)
 
 # ==== MÃ BỆNH NHÂN ====
 tk.Label(frame_info_pk, text="Mã bệnh nhân:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
-entry_mabn = tk.Entry(frame_info_pk, width=20)
+entry_mabn = ttk.Entry(frame_info_pk, width=20)
 entry_mabn.grid(row=0, column=1, pady=5)
 
 label_bn_info = tk.Label(frame_info_pk, text="", bg="#EBF5FB", fg="blue", font=("Arial", 10, "italic"))
@@ -263,7 +263,7 @@ label_bn_info.grid(row=1, column=0, columnspan=3, sticky="w")
 
 # ==== MÃ BÁC SĨ ====
 tk.Label(frame_info_pk, text="Mã bác sĩ:", bg="#EBF5FB").grid(row=2, column=0, sticky="w")
-entry_mabs = tk.Entry(frame_info_pk, width=20)
+entry_mabs = ttk.Entry(frame_info_pk, width=20)
 entry_mabs.grid(row=2, column=1, pady=5)
 
 label_bs_info = tk.Label(frame_info_pk, text="", bg="#EBF5FB", fg="green", font=("Arial", 10, "italic"))
@@ -366,11 +366,11 @@ left_t = tk.Frame(frame_info_t, bg="#EBF5FB")
 left_t.grid(row=0, column=0, padx=20, sticky="nw")
 
 tk.Label(left_t, text="Mã thuốc:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
-t_mathuoc = tk.Entry(left_t, width=30)
+t_mathuoc = ttk.Entry(left_t, width=30)
 t_mathuoc.grid(row=0, column=1, pady=5)
 
 tk.Label(left_t, text="Tên thuốc:", bg="#EBF5FB").grid(row=1, column=0, sticky="w")
-t_tenthuoc = tk.Entry(left_t, width=30)
+t_tenthuoc = ttk.Entry(left_t, width=30)
 t_tenthuoc.grid(row=1, column=1, pady=5)
 
 tk.Label(left_t, text="Đơn vị:", bg="#EBF5FB").grid(row=2, column=0, sticky="w")
@@ -382,15 +382,15 @@ right_t = tk.Frame(frame_info_t, bg="#EBF5FB")
 right_t.grid(row=0, column=1, padx=20, sticky="nw")
 
 tk.Label(right_t, text="Giá thuốc:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
-t_gia = tk.Entry(right_t, width=30)
+t_gia = ttk.Entry(right_t, width=30)
 t_gia.grid(row=0, column=1, pady=5)
 
 tk.Label(right_t, text="Số lượng:", bg="#EBF5FB").grid(row=1, column=0, sticky="w")
-t_soluong = tk.Entry(right_t, width=30)
+t_soluong = ttk.Entry(right_t, width=30)
 t_soluong.grid(row=1, column=1, pady=5)
 
 tk.Label(right_t, text="Công dụng:", bg="#EBF5FB").grid(row=2, column=0, sticky="w")
-t_congdung = tk.Entry(right_t, width=30)
+t_congdung = ttk.Entry(right_t, width=30)
 t_congdung.grid(row=2, column=1, pady=5)
 
 # ===== KHUNG BẢNG THUỐC =====
@@ -415,6 +415,7 @@ tree_thuoc.heading("TenThuoc", text="Tên Thuốc")
 tree_thuoc.heading("DonVi", text="Đơn Vị")
 tree_thuoc.heading("Gia", text="Giá (VNĐ)")
 tree_thuoc.heading("SoLuong", text="Số Lượng")
+tree_thuoc.heading("CongDung", text="Công Dụng")
 
 # ===== ĐỘ RỘNG =====
 tree_thuoc.column("MaThuoc", width=120)
@@ -422,7 +423,73 @@ tree_thuoc.column("TenThuoc", width=200)
 tree_thuoc.column("DonVi", width=120)
 tree_thuoc.column("Gia", width=120)
 tree_thuoc.column("SoLuong", width=120)
+tree_thuoc.column("CongDung", width=120)
 
 tree_thuoc.pack(fill="both", expand=True)
+
+frame_info_ct = tk.LabelFrame(
+    tab_cttoathuoc,
+    text="THÔNG TIN CHI TIẾT TOA THUỐC",
+    bg="#EBF5FB",
+    fg="#1B4F72",
+    font=("Arial", 14, "bold"),
+    padx=15,
+    pady=15
+)
+frame_info_ct.pack(fill="x", padx=20, pady=10)
+
+# ---- CỘT TRÁI ----
+left_ct = tk.Frame(frame_info_ct, bg="#EBF5FB")
+left_ct.grid(row=0, column=0, padx=20, sticky="nw")
+
+tk.Label(left_ct, text="Mã Phiếu Khám:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
+ct_mapk = ttk.Entry(left_ct,width=27)
+ct_mapk.grid(row=0, column=1, pady=5)
+
+tk.Label(left_ct, text="Mã Thuốc:", bg="#EBF5FB").grid(row=1, column=0, sticky="w")
+ct_mathuoc = ttk.Entry(left_ct,width=27)
+ct_mathuoc.grid(row=1, column=1, pady=5)
+
+# ---- CỘT PHẢI ----
+right_ct = tk.Frame(frame_info_ct, bg="#EBF5FB")
+right_ct.grid(row=0, column=1, padx=20, sticky="nw")
+
+tk.Label(right_ct, text="Số lượng:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
+ct_soluong = ttk.Entry(right_ct, width=30)
+ct_soluong.grid(row=0, column=1, pady=5)
+
+tk.Label(right_ct, text="Liều dùng:", bg="#EBF5FB").grid(row=1, column=0, sticky="w")
+ct_lieudung = ttk.Entry(right_ct, width=30)
+ct_lieudung.grid(row=1, column=1, pady=5)
+
+# ===== KHUNG BẢNG =====
+frame_table_ct = tk.LabelFrame(
+    tab_cttoathuoc,
+    text="DANH SÁCH CHI TIẾT TOA THUỐC",
+    bg="#EBF5FB",
+    fg="#1B4F72",
+    font=("Arial", 14, "bold"),
+    padx=10,
+    pady=10
+)
+frame_table_ct.pack(fill="both", expand=True, padx=20, pady=10)
+
+columns_ct = ("MaPK", "MaThuoc", "SoLuong", "LieuDung")
+
+tree_cttt = ttk.Treeview(frame_table_ct, columns=columns_ct, show="headings", height=12)
+
+# ===== TÊN CỘT =====
+tree_cttt.heading("MaPK", text="Mã PK")
+tree_cttt.heading("MaThuoc", text="Mã Thuốc")
+tree_cttt.heading("SoLuong", text="Số Lượng")
+tree_cttt.heading("LieuDung", text="Liều Dùng")
+
+# ===== ĐỘ RỘNG =====
+tree_cttt.column("MaPK", width=120)
+tree_cttt.column("MaThuoc", width=140)
+tree_cttt.column("SoLuong", width=120)
+tree_cttt.column("LieuDung", width=200)
+
+tree_cttt.pack(fill="both", expand=True)
 
 root.mainloop()

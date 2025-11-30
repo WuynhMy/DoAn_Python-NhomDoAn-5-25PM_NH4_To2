@@ -45,8 +45,57 @@ def load_phongbenh():
         tree_pb.insert("", "end", values=row)
 
     conn.close()
+#bác sĩ
+def load_bacsi():
+    conn = connect_db()
+    cursor = conn.cursor()
 
-root = tk.Tk()
+    cursor.execute("SELECT MaBS, HoLot, Ten, Khoa, DiaChi FROM BacSi")
+    rows = cursor.fetchall()
+
+    tree_bs.delete(*tree_bs.get_children())
+
+    for row in rows:
+        tree_bs.insert("", "end", values=row)
+
+    conn.close()
+#Load dữ liệu phiếu khám
+def load_phieukham():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT MaPK, MaBN, MaBS, NgayKham, LoaiKham, ChanDoan,GhiChu FROM PhieuKham")
+    rows = cursor.fetchall()
+
+    tree_pk.delete(*tree_pk.get_children())
+
+    for row in rows:
+        tree_pk.insert("", "end", values=row)
+#Load dữ liệu thuốc
+def load_thuoc():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT MaThuoc, TenThuoc, DonViThuoc, DonGia, CongDung FROM Thuoc")
+    rows = cursor.fetchall()
+
+    tree_thuoc.delete(*tree_thuoc.get_children())
+
+    for row in rows:
+        tree_thuoc.insert("", "end", values=row)
+#Load dữ liệu toa thuốc
+def load_cttoathuoc():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT MaPK, MaThuoc, SoLuong, LieuDung FROM ChiTietToaThuoc")
+    rows = cursor.fetchall()
+
+    tree_cttt.delete(*tree_cttt.get_children())
+
+    for row in rows:
+        tree_cttt.insert("", "end", values=row)
+root = tk.Tk() 
 # ===== STYLE TỔNG =====
 style = ttk.Style()
 style.theme_use("clam")
@@ -94,6 +143,27 @@ tk.Label(root,
          font=("Arial", 26, "bold"),
          fg="#1B4F72",
          bg="#EBF5FB").pack(pady=20)
+
+# ======= KHUNG NÚT DÙNG CHUNG CHO TẤT CẢ TAB =======
+frame_buttons = tk.Frame(root, bg="#EBF5FB")
+frame_buttons.pack(pady=10)
+
+def make_btn(parent, text, color):
+    return tk.Button(
+        parent, text=text, width=12,
+        font=("Segoe UI", 12, "bold"),
+        bg=color, fg="black", relief="ridge", bd=2
+    )
+
+btn_add = make_btn(frame_buttons, "Thêm", "#58D68D")
+btn_edit = make_btn(frame_buttons, "Sửa", "#F5B041")
+btn_delete = make_btn(frame_buttons, "Xóa", "#EC7063")
+btn_clear = make_btn(frame_buttons, "Làm mới", "#D7DBDD")
+
+btn_add.grid(row=0, column=0, padx=12)
+btn_edit.grid(row=0, column=1, padx=12)
+btn_delete.grid(row=0, column=2, padx=12)
+btn_clear.grid(row=0, column=3, padx=12)
 
 # ============= NOTEBOOK =============
 notebook = ttk.Notebook(root)
@@ -296,13 +366,13 @@ frame_table.pack(fill="both", expand=True, padx=10, pady=10)
 # --- BẢNG TREEVIEW ---
 columns_bacsi = ("Mã Bác Sĩ", "Họ Lót", "Tên","Địa Chỉ")
 
-tree = ttk.Treeview(frame_table, columns=columns_bacsi, show="headings", height=12)
-tree.pack(fill="both", expand=True)
+tree_bs = ttk.Treeview(frame_table, columns=columns_bacsi, show="headings", height=12)
+tree_bs.pack(fill="both", expand=True)
 
 for col in columns_bacsi:
-    tree.heading(col, text=col)
-    tree.column(col, width=150)
-
+    tree_bs.heading(col, text=col)
+    tree_bs.column(col, width=150)
+    load_bacsi()
 # =====================
 # TAB PHIẾU KHÁM
 # =====================
@@ -388,7 +458,7 @@ frame_table_pk = tk.LabelFrame(
 )
 frame_table_pk.pack(fill="both", expand=True, padx=20, pady=10)
 
-columns_pk = ("MaPK", "MaBN", "MaBS", "NgayKham", "LoaiKham", "ChanDoan")
+columns_pk = ("MaPK", "MaBN", "MaBS", "NgayKham", "LoaiKham", "ChanDoan","GhiChu")
 
 tree_pk = ttk.Treeview(
     frame_table_pk,
@@ -404,6 +474,7 @@ tree_pk.heading("MaBS", text="Mã Bác Sĩ")
 tree_pk.heading("NgayKham", text="Ngày Khám")
 tree_pk.heading("LoaiKham", text="Loại Khám")
 tree_pk.heading("ChanDoan", text="Chẩn Đoán")
+tree_pk.heading("GhiChu", text="Ghi Chú")
 
 # ===== ĐỘ RỘNG CỘT =====
 tree_pk.column("MaPK", width=110)
@@ -411,9 +482,12 @@ tree_pk.column("MaBN", width=110)
 tree_pk.column("MaBS", width=110)
 tree_pk.column("NgayKham", width=120)
 tree_pk.column("LoaiKham", width=150)
-tree_pk.column("ChanDoan", width=200)
+tree_pk.column("ChanDoan", width=150)
+tree_pk.column("GhiChu", width=150)
 
 tree_pk.pack(fill="both", expand=True)
+load_phieukham()
+
 #Tab thuốc
 frame_info_t = tk.LabelFrame(
     tab_thuoc,
@@ -491,6 +565,7 @@ tree_thuoc.column("SoLuong", width=120)
 tree_thuoc.column("CongDung", width=120)
 
 tree_thuoc.pack(fill="both", expand=True)
+load_thuoc()
 
 frame_info_ct = tk.LabelFrame(
     tab_cttoathuoc,
@@ -556,5 +631,5 @@ tree_cttt.column("SoLuong", width=120)
 tree_cttt.column("LieuDung", width=200)
 
 tree_cttt.pack(fill="both", expand=True)
-
+load_cttoathuoc()
 root.mainloop()

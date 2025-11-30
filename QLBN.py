@@ -1,14 +1,85 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk,messagebox
 from tkcalendar import DateEntry
+import mysql.connector
 
-# ====== WINDOW ======
+# ====== Kết nối MySQL ====== 
+import mysql.connector
+
+def connect_db(): 
+    return mysql.connector.connect( 
+        host="localhost", 
+        user="root",        # thay bằng user MySQL của bạn 
+        password="benhnhan12345",        # thay bằng password MySQL của bạn 
+        database="QLBN" 
+    )
+
+def load_benhnhan():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT MaBN, HoLot, Ten, Phai, NgaySinh, LoaiBenhNhan FROM BenhNhan")
+    rows = cursor.fetchall()
+
+    # Xóa dữ liệu cũ
+    for item in tree.get_children():
+        tree.delete(item)
+
+    # Đổ dữ liệu mới
+    for row in rows:
+        tree.insert("", "end", values=row)
+
+    cursor.close()
+    conn.close()
+#phòng bệnh
+def load_phongbenh():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT MaPhong, TenPhong, LoaiPhong FROM PhongBenh")
+    rows = cursor.fetchall()
+
+    tree_pb.delete(*tree_pb.get_children())
+
+    for row in rows:
+        tree_pb.insert("", "end", values=row)
+
+    conn.close()
+
 root = tk.Tk()
+# ===== STYLE TỔNG =====
+style = ttk.Style()
+style.theme_use("clam")
+
+# Chữ chung
+style.configure("TLabel",
+                font=("Segoe UI", 11),
+                background="#EBF5FB")
+
+style.configure("TEntry",
+                font=("Segoe UI", 11))
+
+style.configure("TRadiobutton",
+                font=("Segoe UI", 11),
+                background="#EBF5FB")
+
+style.configure("TButton",
+                font=("Segoe UI", 11, "bold"),
+                padding=6)
+
+# Bảng
+style.configure("Treeview",
+                font=("Segoe UI", 11),
+                rowheight=28)
+
+style.configure("Treeview.Heading",
+                font=("Segoe UI", 12, "bold"),
+                foreground="#1B4F72")
+
 root.title("Quản lý bệnh nhân")
 root.geometry("1000x750")
 root.configure(bg="#EBF5FB")
 
-# ===== STYLE =====
 style = ttk.Style()
 style.theme_use("clam")
 
@@ -97,35 +168,29 @@ frame_table = tk.LabelFrame(tab_bn, text="DANH SÁCH BỆNH NHÂN",
                             padx=10, pady=10)
 frame_table.pack(fill="both", expand=True, padx=10, pady=10)
 
-columns = ("MaBN", "Họ Lót", "Tên", "Phái", "Ngày Sinh", "Loại Bệnh Nhân")
+columns = ("MaBN", "HoLot", "Ten", "Phai", "NgaySinh", "LoaiBenhNhan")
 tree = ttk.Treeview(frame_table, columns=columns, show="headings", height=12)
 
-for col in columns:
-    tree.heading(col, text=col)
-    tree.column(col, width=150)
+tree.heading("MaBN", text="Mã BN")
+tree.heading("HoLot", text="Họ Lót")
+tree.heading("Ten", text="Tên")
+tree.heading("Phai", text="Phái")
+tree.heading("NgaySinh", text="Ngày Sinh")
+tree.heading("LoaiBenhNhan", text="Loại Bệnh Nhân")
+
+tree.column("MaBN", width=120, anchor="center")
+tree.column("HoLot", width=180, anchor="center")
+tree.column("Ten", width=120, anchor="center")
+tree.column("Phai", width=80, anchor="center")
+tree.column("NgaySinh", width=150, anchor="center")
+tree.column("LoaiBenhNhan", width=150, anchor="center")
 
 tree.pack(fill="both", expand=True)
-
-# ===== NÚT =====
-btn_frame = tk.Frame(tab_bn, bg="#EBF5FB")
-btn_frame.pack(pady=10)
-
-def make_btn(parent, text, color):
-    return tk.Button(parent, text=text, width=12, font=("Segoe UI", 12, "bold"),
-                     bg=color, fg="black", relief="ridge", bd=2)
-
-btn_add = make_btn(btn_frame, "Thêm", "#58D68D")
-btn_update = make_btn(btn_frame, "Sửa", "#F5B041")
-btn_delete = make_btn(btn_frame, "Xóa", "#EC7063")
-btn_clear = make_btn(btn_frame, "Làm mới", "#D7DBDD")
-
-btn_add.grid(row=0, column=0, padx=12)
-btn_update.grid(row=0, column=1, padx=12)
-btn_delete.grid(row=0, column=2, padx=12)
-btn_clear.grid(row=0, column=3, padx=12)
-
+load_benhnhan()
 #Tab phòng khám
 # --- Khung nhập liệu ---
+# --- KHUNG BẢNG DƯỚI ---
+
 frame_info = tk.LabelFrame(
     tab_phongbenh, text="THÔNG TIN PHÒNG BỆNH",
     bg="#EBF5FB", fg="#1B4F72",
@@ -147,7 +212,6 @@ type_var = tk.StringVar(value="NoiTru")
 tk.Radiobutton(frame_info, text="Nội trú", variable=type_var, value="NoiTru", bg="#EBF5FB").grid(row=2, column=1, sticky="e")
 tk.Radiobutton(frame_info, text="Ngoại trú", variable=type_var, value="NgoaiTru", bg="#EBF5FB").grid(row=2, column=1, sticky="w")
 
-
 # --- KHUNG BẢNG DƯỚI ---
 frame_table = tk.LabelFrame(
     tab_phongbenh, text="Danh sách phòng bệnh",
@@ -160,12 +224,13 @@ frame_table.pack(fill="both", expand=True, padx=10, pady=10)
 # --- BẢNG TREEVIEW ---
 columns_phong = ("Mã Phòng", "Tên Phòng", "Loại Phòng")
 
-tree = ttk.Treeview(frame_table, columns=columns_phong, show="headings", height=12)
-tree.pack(fill="both", expand=True)
+tree_pb = ttk.Treeview(frame_table, columns=columns_phong, show="headings", height=12)
+tree_pb.pack(fill="both", expand=True)
 
 for col in columns_phong:
-    tree.heading(col, text=col)
-    tree.column(col, width=150)
+    tree_pb.heading(col, text=col)
+    tree_pb.column(col, width=150)
+    load_phongbenh() 
 #Tab bác sĩ
 #Frame thông tin
 frame_info = tk.LabelFrame(

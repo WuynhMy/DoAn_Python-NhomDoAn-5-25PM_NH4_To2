@@ -14,56 +14,6 @@ def connect_db():
         password="benhnhan12345",        # thay bằng password MySQL của bạn 
         database="QLBN" 
     )
-#phòng bệnh
-def load_phongbenh():
-    conn = connect_db()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT MaPhong, TenPhong, LoaiPhong FROM PhongBenh")
-    rows = cursor.fetchall()
-
-    tree_pb.delete(*tree_pb.get_children())
-
-    for row in rows:
-        tree_pb.insert("", "end", values=row)
-
-    conn.close()
- #phiếu khám   
-def load_phieukham():
-    conn = connect_db()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT MaPK, MaBN, MaBS, NgayKham, LoaiKham, ChanDoan,GhiChu FROM PhieuKham")
-    rows = cursor.fetchall()
-
-    tree_pk.delete(*tree_pk.get_children())
-
-    for row in rows:
-        tree_pk.insert("", "end", values=row)
-#Load dữ liệu thuốc
-def load_thuoc():
-    conn = connect_db()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT MaThuoc, TenThuoc, DonViThuoc, DonGia, CongDung FROM Thuoc")
-    rows = cursor.fetchall()
-
-    tree_thuoc.delete(*tree_thuoc.get_children())
-
-    for row in rows:
-        tree_thuoc.insert("", "end", values=row)
-#Load dữ liệu toa thuốc
-def load_cttoathuoc():
-    conn = connect_db()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT MaPK, MaThuoc, SoLuong, LieuDung FROM ChiTietToaThuoc")
-    rows = cursor.fetchall()
-
-    tree_cttt.delete(*tree_cttt.get_children())
-
-    for row in rows:
-        tree_cttt.insert("", "end", values=row)
 root = tk.Tk() 
 # ===== STYLE TỔNG =====
 style = ttk.Style()
@@ -119,10 +69,8 @@ notebook.pack(fill="both", expand=True, padx=20, pady=10)
 
 tab_bn = ttk.Frame(notebook)
 notebook.add(tab_bn, text="Bệnh Nhân")
-tab_phongbenh=ttk.Frame(notebook)
-notebook.add(tab_phongbenh,text="Phòng Bệnh")
-tab_bacsi =ttk.Frame(notebook)
-notebook.add(tab_bacsi, text="Bác Sĩ")
+tab_pb = ttk.Frame(notebook)
+notebook.add(tab_pb,text="Phòng Bệnh")
 tab_phieukham = ttk.Frame(notebook)
 notebook.add(tab_phieukham,text="Phiếu Khám")
 tab_thuoc = ttk.Frame(notebook)
@@ -142,8 +90,8 @@ left_col = tk.Frame(frame_info, bg="#EBF5FB")
 left_col.grid(row=0, column=0, padx=20)
 
 tk.Label(left_col, text="Mã số:", bg="#EBF5FB").pack(anchor="w")
-entry_maso = ttk.Entry(left_col, width=30)
-entry_maso.pack(anchor="w", pady=5)
+entry_mabn = ttk.Entry(left_col, width=30)
+entry_mabn.pack(anchor="w", pady=5)
 
 tk.Label(left_col, text="Họ lót:", bg="#EBF5FB").pack(anchor="w")
 entry_holot_bn = ttk.Entry(left_col, width=30)
@@ -269,7 +217,7 @@ def add_benhnhan():
         load_benhnhan()
 
 def search_benhnhan():
-    MaBN = entry_maso.get()
+    MaBN = entry_mabn.get()
 
     try:
         conn = connect_db()
@@ -280,9 +228,9 @@ def search_benhnhan():
 
         if result:
             entry_holot_bn.delete(0, tk.END)
-            entry_ten.delete(0, tk.END)
+            entry_ten_bn.delete(0, tk.END)
             entry_ngaysinh.set_date(result[3])
-            entry_diachi.delete(0, tk.END)
+            entry_diachi_bn.delete(0, tk.END)
             entry_map.delete(0, tk.END)
 
             entry_holot_bn.insert(0, result[1])
@@ -386,36 +334,10 @@ tk.Button(frame_buttons_bn, text="Cập nhật", width=12, bg="#F5B7B1",command=
 tk.Button(frame_buttons_bn, text="Tìm kiếm", width=12, bg="#D7BDE2",command=search_benhnhan).grid(row=0, column=3, padx=5)
 tk.Button(frame_buttons_bn, text="Làm mới", width=12, bg="#D6EAF8",command=clear_benhnhan).grid(row=0, column=4, padx=5)
 load_benhnhan()
-#Tab phòng khám
-# --- Khung nhập liệu ---
-frame_info = tk.LabelFrame(
-    tab_phongbenh, text="THÔNG TIN PHÒNG BỆNH",
-    bg="#EBF5FB", fg="#1B4F72",
-    font=("Arial", 14, "bold"),
-    padx=15, pady=15
-)
-# --- KHUNG BẢNG DƯỚI ---
-frame_table = tk.LabelFrame(
-    tab_phongbenh, text="Danh sách phòng bệnh",
-    bg="#EBF5FB", fg="#1B4F72",
-    font=("Arial", 14, "bold"),
-    padx=10, pady=10
-)
-frame_table.pack(fill="both", expand=True, padx=10, pady=10)
-# --- BẢNG TREEVIEW ---
-columns_phong = ("Mã Phòng", "Tên Phòng", "Loại Phòng")
-
-tree_pb = ttk.Treeview(frame_table, columns=columns_phong, show="headings", height=12)
-tree_pb.pack(fill="both", expand=True)
-
-for col in columns_phong:
-    tree_pb.heading(col, text=col)
-    tree_pb.column(col, width=150)
-    load_phongbenh() 
-#Tab bác sĩ
+#Tab phòng bệnh
 #Frame thông tin
 frame_info = tk.LabelFrame(
-    tab_bacsi, text="THÔNG TIN BÁC SĨ",
+    tab_pb, text="THÔNG TIN PHÒNG BỆNH",
     bg="#EBF5FB", fg="#1B4F72",
     font=("Arial", 14, "bold"),
     padx=15, pady=15
@@ -430,232 +352,203 @@ right_col = tk.Frame(frame_info, bg="#EBF5FB")
 right_col.grid(row=0, column=1, padx=10, pady=5, sticky="nw")
 
 # ====== CỘT TRÁI ======
-tk.Label(left_col, text="Mã bác sĩ:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
-entry_mabs = ttk.Entry(left_col, width=30)
-entry_mabs.grid(row=0, column=1, pady=5)
+tk.Label(left_col, text="Mã Phòng:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
+entry_map = ttk.Entry(left_col, width=30)
+entry_map.grid(row=0, column=1, pady=5)
 
-tk.Label(left_col, text="Họ lót:", bg="#EBF5FB").grid(row=1, column=0, sticky="w")
-entry_holot = ttk.Entry(left_col, width=30)
-entry_holot.grid(row=1, column=1, pady=5)
+tk.Label(left_col, text="Tên phòng:", bg="#EBF5FB").grid(row=1, column=0, sticky="w")
+entry_tenphong = ttk.Entry(left_col, width=30)
+entry_tenphong.grid(row=1, column=1, pady=5)
 
-tk.Label(left_col, text="Tên:", bg="#EBF5FB").grid(row=2, column=0, sticky="w")
-entry_ten = ttk.Entry(left_col, width=30)
-entry_ten.grid(row=2, column=1, pady=5)
+tk.Label(left_col, text="Số lượng :", bg="#EBF5FB").grid(row=2, column=0, sticky="w")
+entry_soluong = ttk.Entry(left_col, width=30)
+entry_soluong.grid(row=2, column=1, pady=5)
 
-tk.Label(left_col, text="Khoa khám:", bg="#EBF5FB").grid(row=3, column=0, sticky="w")
-combo_khoa = ttk.Combobox(
+tk.Label(left_col, text="Loại phòng:", bg="#EBF5FB").grid(row=3, column=0, sticky="w")
+combo_loaiphong = ttk.Combobox(
     left_col,
     values=[
-        "Nội tổng hợp",
-        "Ngoại tổng hợp",
-        "Sản",
-        "Nhi",
-        "Hồi sức cấp cứu",
-        "Tim mạch",
-        "Da liễu",
-        "Tai Mũi Họng"
+        "Thường",
+        "Hồi sức tích cực",
+        "Mổ",
+        "VIP",
+        "Cấp cứu",
     ],
     state="readonly",
-    width=28
+    width=20
 )
-combo_khoa.grid(row=3, column=1, pady=5)
-combo_khoa.current(0)
+combo_loaiphong.grid(row=3, column=1, pady=5)
+combo_loaiphong.current(0)
 
 # ====== CỘT PHẢI ======
-tk.Label(right_col, text="Địa chỉ:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
-entry_diachi = ttk.Entry(right_col, width=40)
-entry_diachi.grid(row=1, column=0, pady=5, sticky="w")
+tk.Label(right_col, text="Ghi chú:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
+entry_ghichu = ttk.Entry(right_col, width=40)
+entry_ghichu.grid(row=1, column=0, pady=5, sticky="w")
 
 # --- KHUNG BẢNG DƯỚI ---
 frame_table = tk.LabelFrame(
-    tab_bacsi, text="Danh sách bác sĩ",
+    tab_pb, text="Danh sách phòng bệnh",
     bg="#EBF5FB", fg="#1B4F72",
     font=("Arial", 14, "bold"),
     padx=10, pady=10
 )
 frame_table.pack(fill="both", expand=True)
 
-columns_bacsi = ("Mã Bác Sĩ", "Họ Lót", "Tên","Khoa Khám","Địa Chỉ")
-tree_bs = ttk.Treeview(frame_table, columns=columns_bacsi, show="headings", height=10)
-tree_bs.pack(fill="both", expand=True)
+columns_phongbenh = ("Mã Phòng", "Tên Phòng", "Loại Phòng","Số Lượng","Ghi Chú")
+tree_pb = ttk.Treeview(frame_table, columns=columns_phongbenh, show="headings", height=10)
+tree_pb.pack(fill="both", expand=True,anchor="center")
 
-#Chức năng CRUD cho bác sĩ
-for col in columns_bacsi:
-    tree_bs.heading(col, text=col)
-    tree_bs.column(col, width=150)
+#Chức năng CRUD cho phong bệnh
+for col in columns_phongbenh:
+    tree_pb.heading(col, text=col)
+    tree_pb.column(col, width=150)
 
-def clear_bacsi():
-    entry_mabs.delete(0, tk.END)
-    entry_holot.delete(0, tk.END)
-    entry_ten.delete(0, tk.END)
-    combo_khoa.current(0)
-    entry_diachi.delete(0, tk.END)
+def clear_pb():
+    entry_map.delete(0, tk.END)
+    entry_tenphong.delete(0, tk.END)
+    entry_soluong.delete(0, tk.END)
+    combo_loaiphong.current(0)
+    entry_ghichu.delete(0, tk.END)
 
-def load_bacsi():
+def load_phongbenh():
     conn = connect_db()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT MaBS, HoLot, Ten, Khoa, DiaChi FROM BacSi")
+    cursor.execute("SELECT MaPhong, TenPhong, LoaiPhong, SoGiuong, GhiChu FROM Phong")
     rows = cursor.fetchall()
 
-    tree_bs.delete(*tree_bs.get_children())
+    tree_pb.delete(*tree_pb.get_children())
 
     for row in rows:
-        tree_bs.insert("", "end", values=row)
+        tree_pb.insert("", "end", values=row)
 
     conn.close()
 
-def them_bacsi():
-    mabs = entry_mabs.get().strip()
-    holot = entry_holot.get().strip()
-    ten = entry_ten.get().strip()
-    khoa = combo_khoa.get().strip()
-    diachi = entry_diachi.get().strip()
-
-    if mabs == "" or ten == "" or khoa == "":
-        messagebox.showwarning("Thiếu dữ liệu", "Vui lòng nhập đầy đủ Mã BS - Tên - Khoa")
-        return
-
-    conn = connect_db()
-    cur = conn.cursor()
-
+def them_phongbenh():
     try:
+        MaPhong = entry_map.get()
+        TenPhong = entry_tenphong.get()
+        SoLuong = entry_soluong.get()
+        LoaiPhong = combo_loaiphong.get()
+        GhiChu = entry_ghichu.get()
+
+        conn = mysql.connect(...)
+        cur = conn.cursor()
+
         cur.execute("""
-            INSERT INTO BacSi (MaBS, HoLot, Ten, Khoa, DiaChi)
+            INSERT INTO Phong (MaPhong, TenPhong, SoLuong, LoaiPhong, GhiChu)
             VALUES (%s, %s, %s, %s, %s)
-        """, (mabs, holot, ten, khoa, diachi))
+        """, (MaPhong, TenPhong, SoLuong, LoaiPhong, GhiChu))
 
         conn.commit()
-        load_bacsi()
-        clear_bacsi()
-        messagebox.showinfo("Thành công", "Thêm bác sĩ thành công!")
+        messagebox.showinfo("Thành công", "Đã thêm phòng!")
 
+        load_phongbenh()   # load lại bảng
     except Exception as e:
         messagebox.showerror("Lỗi thêm", str(e))
 
-    conn.close()
-
-def sua_bacsi():
-    selected = tree_bs.selection() 
+def sua_phongbenh():
+    selected = tree_pb.selection() 
     if not selected: 
-        messagebox.showwarning("Chưa chọn", "Hãy chọn bác sĩ để sửa") 
+        messagebox.showwarning("Chưa chọn", "Hãy chọn phòng bệnh để sửa") 
         return 
-    values = tree_bs.item(selected)["values"] 
-    entry_mabs.delete(0, tk.END) 
-    entry_mabs.insert(0, values[0]) 
-    entry_holot.delete(0, tk.END) 
-    entry_holot.insert(0, values[1]) 
-    entry_ten.delete(0, tk.END) 
-    entry_ten.insert(0, values[2]) 
-    combo_khoa.set(values[3]) 
-    entry_diachi.delete(0, tk.END)
-    entry_diachi.insert(0, values[4])
+    values = tree_pb.item(selected)["values"] 
+    entry_map.delete(0, tk.END) 
+    entry_map.insert(0, values[0]) 
+    entry_tenphong.delete(0, tk.END) 
+    entry_tenphong.insert(0, values[1]) 
+    entry_soluong.delete(0, tk.END) 
+    entry_soluong.insert(0, values[2]) 
+    combo_loaiphong.set(values[3]) 
+    entry_ghichu.delete(0, tk.END)
+    entry_ghichu.insert(0, values[4])
 
-def luu_bacsi():
-    mabs = entry_mabs.get().strip()
-    holot = entry_holot.get().strip()
-    ten = entry_ten.get().strip()
-    khoa = combo_khoa.get().strip()
-    diachi = entry_diachi.get().strip()
+def luu_phongbenh():
+    map = entry_map.get().strip()
+    tenphong = entry_tenphong.get().strip()
+    soluong = entry_soluong.get().strip()
+    loaiphong = combo_loaiphong.get().strip()
+    ghichu = entry_ghichu.get().strip()
 
-    if mabs == "":
-        messagebox.showwarning("Thiếu dữ liệu", "Không tìm thấy mã bác sĩ cần cập nhật")
+    if map == "":
+        messagebox.showwarning("Thiếu dữ liệu", "Không tìm thấy mã phòng cần cập nhật")
         return
 
     conn = connect_db()
     cur = conn.cursor()
 
     cur.execute("""
-    UPDATE BacSi
-    SET HoLot=%s, Ten=%s, Khoa=%s, DiaChi=%s
+    UPDATE Phong
+    SET MaPhong=%s, TenPhong=%s, SoLuong=%s, GhiChu=%s
     WHERE MaBS=%s
-""", (holot, ten, khoa, diachi, mabs))
+""", (tenphong, soluong, loaiphong, ghichu, map))
 
     conn.commit()
     conn.close()
 
-    load_bacsi()
-    clear_bacsi()
-    messagebox.showinfo("Thành công", "Đã cập nhật thông tin bác sĩ")
-frame_buttons = tk.Frame(tab_bacsi)
-frame_buttons.pack(fill="x",pady=5,before=tree_bs)
+    load_phongbenh()
+  
+    messagebox.showinfo("Thành công", "Đã cập nhật thông tin phòng bệnh")
+frame_buttons = tk.Frame(tab_pb)
+frame_buttons.pack(fill="x",pady=5,before=tree_pb)
 
-tk.Button(frame_buttons, text="Thêm", width=12, bg="#A9DFBF", command=them_bacsi).grid(row=0, column=0, padx=5)
-tk.Button(frame_buttons, text="Sửa", width=12, bg="#F9E79F", command=sua_bacsi).grid(row=0, column=1, padx=5)
-tk.Button(frame_buttons, text="Lưu", width=12, bg="#F5B7B1", command=luu_bacsi).grid(row=0, column=2, padx=5)
-tk.Button(frame_buttons, text="Làm mới", width=12, bg="#D6EAF8", command=clear_bacsi).grid(row=0, column=3, padx=5)
-load_bacsi()
+tk.Button(frame_buttons, text="Thêm", width=12, bg="#A9DFBF", command=them_phongbenh).grid(row=0, column=0, padx=5)
+tk.Button(frame_buttons, text="Sửa", width=12, bg="#F9E79F", command=sua_phongbenh).grid(row=0, column=1, padx=5)
+tk.Button(frame_buttons, text="Lưu", width=12, bg="#F5B7B1", command=luu_phongbenh).grid(row=0, column=2, padx=5)
+tk.Button(frame_buttons, text="Làm mới", width=12, bg="#D6EAF8", command=clear_pb).grid(row=0, column=3, padx=5)
+load_phongbenh()
 # TAB PHIẾU KHÁM
-# =====================
-frame_info_pk = tk.LabelFrame(
-    tab_phieukham,
-    text="THÔNG TIN PHIẾU KHÁM",
-    bg="#EBF5FB",
-    fg="#1B4F72",
-    font=("Arial", 14, "bold"),
-    padx=15, pady=15
-)
-frame_info_pk.pack(fill="x", padx=20, pady=10)
+frame_info_pk = tk.LabelFrame(tab_phieukham, text="THÔNG TIN BỆNH NHÂN",
+                           bg="#EBF5FB", fg="#1B4F72",
+                           font=("Arial", 14, "bold"),
+                           padx=15, pady=15)
+frame_info_pk.pack(fill="x", padx=20)
 
-# ==== MÃ BỆNH NHÂN ====
-tk.Label(frame_info_pk, text="Mã bệnh nhân:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
-entry_mabn = ttk.Entry(frame_info_pk, width=20)
-entry_mabn.grid(row=0, column=1, pady=5)
+# Các ô nhập liệu
+style.configure("TLabel",
+                font=("Segoe UI", 9),     # ↓ nhỏ hơn
+                background="#E8F4FC")
 
-label_bn_info = tk.Label(frame_info_pk, text="", bg="#EBF5FB", fg="blue", font=("Arial", 10, "italic"))
-label_bn_info.grid(row=1, column=0, columnspan=3, sticky="w")
+ttk.Label(frame_info_pk, text="Mã PK:").grid(row=0, column=0, padx=5, pady=5)
+entry_maphieu = ttk.Entry(frame_info_pk, style="TEntry")
+entry_maphieu.grid(row=0, column=1, padx=5, pady=5)
 
+ttk.Label(frame_info_pk, text="Mã BN:").grid(row=0, column=2, padx=5, pady=5)
+entry_mabn_pk = ttk.Entry(frame_info_pk, style="TEntry")
+entry_mabn_pk.grid(row=0, column=3, padx=5, pady=5)
 
-# ==== MÃ BÁC SĨ ====
-tk.Label(frame_info_pk, text="Mã bác sĩ:", bg="#EBF5FB").grid(row=2, column=0, sticky="w")
-entry_mabs_pk = ttk.Entry(frame_info_pk, width=20)
-entry_mabs_pk.grid(row=2, column=1, pady=5)
+ttk.Label(frame_info_pk, text="Mã BS:").grid(row=1, column=0, padx=5, pady=5)
+entry_mabs_pk = ttk.Entry(frame_info_pk, style="TEntry")
+entry_mabs_pk.grid(row=1, column=1, padx=5, pady=5)
 
-label_bs_info = tk.Label(frame_info_pk, text="", bg="#EBF5FB", fg="green", font=("Arial", 10, "italic"))
-label_bs_info.grid(row=3, column=0, columnspan=3, sticky="w")
+ttk.Label(frame_info_pk, text="Ngày khám:").grid(row=1, column=2, padx=5, pady=5)
+entry_ngaykham = ttk.Entry(frame_info_pk, style="TEntry")
+entry_ngaykham.grid(row=1, column=3, padx=5, pady=5)
 
+ttk.Label(frame_info_pk, text="Loại khám:").grid(row=2, column=0, padx=5, pady=5)
+entry_loaikham = ttk.Entry(frame_info_pk, style="TEntry")
+entry_loaikham.grid(row=2, column=1, padx=5, pady=5)
 
-# ====================================
-#     CÁC HÀM TỰ ĐỘNG HIỆN THÔNG TIN
-# ====================================
+ttk.Label(frame_info_pk, text="Chẩn đoán:").grid(row=2, column=2, padx=5, pady=5)
+entry_chandoan = ttk.Entry(frame_info_pk, style="TEntry")
+entry_chandoan.grid(row=2, column=3, padx=5, pady=5)
 
-def show_benhnhan_info(event=None):
-    mabn = entry_mabn.get().strip()
-    if mabn == "":
-        label_bn_info.config(text="")
-        return
-    
-    row = get_bn_info(mabn)
-    if row:
-        hoTen, ngaySinh, gioiTinh = row
-        label_bn_info.config(
-            text=f"Tên: {hoTen} | Ngày sinh: {ngaySinh} | Giới tính: {gioiTinh}"
-        )
-    else:
-        label_bn_info.config(text="⚠ Không tìm thấy bệnh nhân!")
+ttk.Label(frame_info_pk, text="Ghi chú:").grid(row=3, column=0, padx=5, pady=5)
+entry_ghichu = ttk.Entry(frame_info_pk, width=50, style="TEntry")
+entry_ghichu.grid(row=3, column=1, columnspan=3, padx=5, pady=5)
 
-def show_bacsi_info(event=None):
-    mabs = entry_mabs.get().strip()
-    if mabs == "":
-        label_bs_info.config(text="")
-        return
-    
-    row = get_bacsi_info(mabs)
-    if row:
-        hoten, khoa = row
-        label_bs_info.config(
-            text=f"Bác sĩ: {hoten} | Khoa: {khoa}"
-        )
-    else:
-        label_bs_info.config(text="⚠ Không tìm thấy bác sĩ!")
+# ===== Bảng =====
+frame_tree_pk = ttk.Frame(tab_phieukham)
+frame_tree_pk.pack(fill="both", expand=True, padx=10, pady=5)
 
+columns = ("MaPK","MaBN","MaBS","NgayKham","LoaiKham","ChanDoan","GhiChu")
+tree_pk = ttk.Treeview(frame_tree_pk, columns=columns, show="headings")
 
-# GẮN SỰ KIỆN TỰ ĐỘNG TRA CỨU
-entry_mabn.bind("<FocusOut>", show_benhnhan_info)
-entry_mabn.bind("<KeyRelease>", show_benhnhan_info)
+for col in columns:
+    tree_pk.heading(col, text=col)
+    tree_pk.column(col, width=120)
 
-entry_mabs.bind("<FocusOut>", show_bacsi_info)
-entry_mabs.bind("<KeyRelease>", show_bacsi_info)
+tree_pk.pack(fill="both", expand=True)
 
 frame_table_pk = tk.LabelFrame(
     tab_phieukham,
@@ -669,13 +562,6 @@ frame_table_pk = tk.LabelFrame(
 frame_table_pk.pack(fill="both", expand=True, padx=20, pady=10)
 
 columns_pk = ("MaPK", "MaBN", "MaBS", "NgayKham", "LoaiKham", "ChanDoan","GhiChu")
-
-tree_pk = ttk.Treeview(
-    frame_table_pk,
-    columns=columns_pk,
-    show="headings",
-    height=12
-)
 
 # ===== ĐẶT TÊN CỘT =====
 tree_pk.heading("MaPK", text="Mã Phiếu")
@@ -696,7 +582,144 @@ tree_pk.column("ChanDoan", width=150)
 tree_pk.column("GhiChu", width=150)
 
 tree_pk.pack(fill="both", expand=True)
+
+def clear_phieukham():
+    entry_maphieu.delete(0, tk.END)
+    entry_mabn_pk.delete(0, tk.END)
+    entry_mabs_pk.delete(0, tk.END)
+    entry_ngaykham.delete(0, tk.END)
+    entry_loaikham.delete(0, tk.END)
+    entry_chandoan.delete(0, tk.END)
+    entry_ghichu.delete(0, tk.END)
+
+def load_phieukham():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT MaPK, MaBN, MaBS, NgayKham, LoaiKham, ChanDoan, GhiChu FROM PhieuKham")
+    rows = cursor.fetchall()
+
+    tree_pk.delete(*tree_pk.get_children())
+
+    for row in rows:
+        tree_pk.insert("", "end", values=row)
+
+def them_phieukham():
+    MaPK = entry_maphieu.get()
+    MaBN = entry_mabn_pk.get()
+    MaBS = entry_mabs_pk.get()
+    NgayKham = entry_ngaykham.get()
+    LoaiKham = entry_loaikham.get()
+    ChanDoan = entry_chandoan.get()
+    GhiChu = entry_ghichu.get()
+
+    try:
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        sql = """
+        INSERT INTO PhieuKham (MaPK, MaBN, MaBS, NgayKham, LoaiKham, ChanDoan, GhiChu)
+        VALUES (%s,%s,%s,%s,%s,%s,%s)
+        """
+        cursor.execute(sql, (MaPK, MaBN, MaBS, NgayKham, LoaiKham, ChanDoan, GhiChu))
+        conn.commit()
+
+        messagebox.showinfo("Thành công", "Đã thêm phiếu khám!")
+
+    except mysql.connector.Error as e:
+        messagebox.showerror("Lỗi", f"Lỗi khi thêm: {e}")
+    finally:
+        conn.close()
+        load_phieukham()
+
+def sua_phieukham():
+    selected = tree_pk.focus()
+    if not selected:
+        messagebox.showwarning("Chú ý", "Hãy chọn phiếu khám để sửa!")
+        return
+
+    values = tree_pk.item(selected, "values")
+
+    entry_maphieu.delete(0, tk.END)
+    entry_mabn_pk.delete(0, tk.END)
+    entry_mabs_pk.delete(0, tk.END)
+    entry_ngaykham.delete(0, tk.END)
+    entry_loaikham.delete(0, tk.END)
+    entry_chandoan.delete(0, tk.END)
+    entry_ghichu.delete(0, tk.END)
+
+    entry_maphieu.insert(0, values[0])
+    entry_mabn_pk.insert(0, values[1])
+    entry_mabs_pk.insert(0, values[2])
+    entry_ngaykham.insert(0, values[3])
+    entry_loaikham.insert(0, values[4])
+    entry_chandoan.insert(0, values[5])
+    entry_ghichu.insert(0, values[6])
+
+def luu_phieukham():
+    MaPK = entry_maphieu.get()
+    MaBN = entry_mabn_pk.get()
+    MaBS = entry_mabs_pk.get()
+    NgayKham = entry_ngaykham.get()
+    LoaiKham = entry_loaikham.get()
+    ChanDoan = entry_chandoan.get()
+    GhiChu = entry_ghichu.get()
+
+    try:
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        sql = """
+        UPDATE PhieuKham SET
+            MaBN=%s, MaBS=%s, NgayKham=%s, LoaiKham=%s, ChanDoan=%s, GhiChu=%s
+        WHERE MaPK=%s
+        """
+
+        cursor.execute(sql, (MaBN, MaBS, NgayKham, LoaiKham, ChanDoan, GhiChu, MaPK))
+        conn.commit()
+
+        messagebox.showinfo("Thành công", "Đã cập nhật!")
+
+    except mysql.connector.Error as e:
+        messagebox.showerror("Lỗi", f"Lỗi khi lưu: {e}")
+    finally:
+        conn.close()
+        load_phieukham()
+
+def xoa_phieukham():
+    selected = tree_pk.focus()
+    if not selected:
+        messagebox.showwarning("Chú ý", "Hãy chọn phiếu khám cần xóa!")
+        return
+
+    MaPK = tree_pk.item(selected, "values")[0]
+
+    if not messagebox.askyesno("Xác nhận", f"Bạn có chắc muốn xóa phiếu {MaPK}?"):
+        return
+
+    try:
+        conn = connect_db()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM PhieuKham WHERE MaPK=%s", (MaPK,))
+        conn.commit()
+
+        messagebox.showinfo("Thành công", "Đã xóa phiếu khám!")
+
+    except mysql.connector.Error as e:
+        messagebox.showerror("Lỗi", f"Lỗi khi xóa: {e}")
+
+    finally:
+        conn.close()
+        load_phieukham()
+#CRUD CHO PHIẾU KHÁM
+frame_buttons = tk.Frame(tab_phieukham)
+frame_buttons.pack(fill="x",pady=5,before=tree_pk)
 load_phieukham()
+tk.Button(frame_buttons, text="Thêm", width=12, bg="#A9DFBF", command=them_phieukham).grid(row=0, column=0, padx=5)
+tk.Button(frame_buttons, text="Sửa", width=12, bg="#F9E79F", command=sua_phieukham).grid(row=0, column=1, padx=5)
+tk.Button(frame_buttons, text="Lưu", width=12, bg="#F5B7B1", command=luu_phieukham).grid(row=0, column=2, padx=5)
+tk.Button(frame_buttons, text="Làm mới", width=12, bg="#D6EAF8", command=clear_phieukham).grid(row=0, column=3, padx=5)
+tk.Button(frame_buttons, text="Xóa", width=12, bg="#E2122B", command=xoa_phieukham).grid(row=0, column=4, padx=5)
 
 #Tab thuốc
 frame_info_t = tk.LabelFrame(
@@ -734,13 +757,9 @@ tk.Label(right_t, text="Giá thuốc:", bg="#EBF5FB").grid(row=0, column=0, stic
 t_gia = ttk.Entry(right_t, width=30)
 t_gia.grid(row=0, column=1, pady=5)
 
-tk.Label(right_t, text="Số lượng:", bg="#EBF5FB").grid(row=1, column=0, sticky="w")
-t_soluong = ttk.Entry(right_t, width=30)
-t_soluong.grid(row=1, column=1, pady=5)
-
-tk.Label(right_t, text="Công dụng:", bg="#EBF5FB").grid(row=2, column=0, sticky="w")
+tk.Label(right_t, text="Công dụng:", bg="#EBF5FB").grid(row=1, column=0, sticky="w")
 t_congdung = ttk.Entry(right_t, width=30)
-t_congdung.grid(row=2, column=1, pady=5)
+t_congdung.grid(row=1, column=1, pady=5)
 
 # ===== KHUNG BẢNG THUỐC =====
 frame_table_t = tk.LabelFrame(
@@ -754,7 +773,7 @@ frame_table_t = tk.LabelFrame(
 )
 frame_table_t.pack(fill="both", expand=True, padx=20, pady=10)
 
-columns_t = ("MaThuoc", "TenThuoc", "DonVi", "Gia", "SoLuong","CongDung")
+columns_t = ("MaThuoc", "TenThuoc", "DonVi", "Gia","CongDung")
 
 tree_thuoc = ttk.Treeview(frame_table_t, columns=columns_t, show="headings", height=12)
 
@@ -763,7 +782,6 @@ tree_thuoc.heading("MaThuoc", text="Mã Thuốc")
 tree_thuoc.heading("TenThuoc", text="Tên Thuốc")
 tree_thuoc.heading("DonVi", text="Đơn Vị")
 tree_thuoc.heading("Gia", text="Giá (VNĐ)")
-tree_thuoc.heading("SoLuong", text="Số Lượng")
 tree_thuoc.heading("CongDung", text="Công Dụng")
 
 # ===== ĐỘ RỘNG =====
@@ -771,12 +789,166 @@ tree_thuoc.column("MaThuoc", width=120)
 tree_thuoc.column("TenThuoc", width=200)
 tree_thuoc.column("DonVi", width=120)
 tree_thuoc.column("Gia", width=120)
-tree_thuoc.column("SoLuong", width=120)
 tree_thuoc.column("CongDung", width=120)
 
 tree_thuoc.pack(fill="both", expand=True)
-load_thuoc()
+def clear_thuoc():
+    t_mathuoc.delete(0, tk.END)
+    t_tenthuoc.delete(0, tk.END)
+    t_donvi.delete(0, tk.END)
+    t_gia.delete(0, tk.END)
+    t_congdung.delete(0, tk.END)
 
+#Load dữ liệu thuốc
+def load_thuoc():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT MaThuoc, TenThuoc, DonViThuoc, DonGia, CongDung FROM Thuoc")
+    rows = cursor.fetchall()
+
+    tree_thuoc.delete(*tree_thuoc.get_children())
+
+    for row in rows:
+        tree_thuoc.insert("", "end", values=row)
+def add_thuoc():
+    MaThuoc = t_mathuoc.get()
+    TenThuoc = t_tenthuoc.get()
+    DonVi = t_donvi.get()
+    DonGia = t_gia.get()
+    CongDung = t_congdung.get()
+
+    # --- KIỂM TRA RỖNG ---
+    if DonGia.strip() == "":
+        messagebox.showwarning("Thiếu dữ liệu", "Đơn giá không được để trống!")
+        return
+
+    # --- KIỂM TRA ĐƠN GIÁ CÓ PHẢI SỐ ---
+    try:
+        DonGia = float(DonGia)
+    except:
+        messagebox.showerror("Lỗi", "Đơn giá phải là một số hợp lệ!")
+        return
+
+    try:
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        sql = """
+            INSERT INTO Thuoc (MaThuoc, TenThuoc, DonViThuoc, DonGia, CongDung)
+            VALUES (%s, %s, %s, %s, %s)
+        """
+
+        cursor.execute(sql, (MaThuoc, TenThuoc, DonVi, DonGia, CongDung))
+        conn.commit()
+
+        messagebox.showinfo("Thành công", "Đã thêm thuốc!")
+    except mysql.connector.Error as e:
+        messagebox.showerror("Lỗi", f"Lỗi khi thêm thuốc: {e}")
+    finally:
+        conn.close()
+        load_thuoc()
+
+def search_thuoc():
+    MaThuoc = t_mathuoc.get()
+
+    try:
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT * FROM Thuoc WHERE MaThuoc = %s", (MaThuoc,))
+        result = cursor.fetchone()
+
+        if result:
+            t_tenthuoc.delete(0, tk.END)
+            t_donvi.delete(0, tk.END)
+            t_gia.delete(0, tk.END)
+            t_congdung.delete(0, tk.END)
+
+            t_tenthuoc.insert(0, result[1])
+            t_donvi.insert(0, result[2])
+            t_gia.insert(0, result[3])
+            t_congdung.insert(0, result[4])
+
+            messagebox.showinfo("Kết quả", "Đã tìm thấy thuốc!")
+        else:
+            messagebox.showwarning("Không tìm thấy", "Không có thuốc này trong hệ thống!")
+
+    except Exception as e:
+        messagebox.showerror("Lỗi", f"Không thể tìm thuốc!\n{e}")
+
+    finally:
+        try:
+            conn.close()
+        except:
+            pass
+
+def update_thuoc():
+    MaThuoc = t_mathuoc.get()
+    TenThuoc = t_tenthuoc.get()
+    DonVi = t_donvi.get()
+    DonGia = t_gia.get()
+    CongDung = t_congdung.get()
+
+    try:
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        sql = """
+            UPDATE Thuoc SET 
+                TenThuoc=%s, DonViThuoc=%s, DonGia=%s, CongDung=%s
+            WHERE MaThuoc=%s
+        """
+
+        cursor.execute(sql, (TenThuoc, DonVi, DonGia, CongDung, MaThuoc))
+        conn.commit()
+
+        messagebox.showinfo("Thành công", "Đã cập nhật thuốc!")
+    except mysql.connector.Error as e:
+        messagebox.showerror("Lỗi", f"Lỗi khi cập nhật: {e}")
+    finally:
+        conn.close()
+        load_thuoc()
+
+def sua_thuoc():
+    selected = tree_thuoc.selection()
+    if not selected:
+        messagebox.showwarning("Chưa chọn", "Hãy chọn thuốc cần sửa!")
+        return
+
+    values = tree_thuoc.item(selected)["values"]
+
+    math = values[0]
+    tenthuoc = values[1]
+    donvi = values[2]
+    dongia = values[3]
+    congdung = values[4]
+
+    t_mathuoc.delete(0, tk.END)
+    t_mathuoc.insert(0, math)
+
+    t_tenthuoc.delete(0, tk.END)
+    t_tenthuoc.insert(0, tenthuoc)
+
+    t_donvi.delete(0, tk.END)
+    t_donvi.insert(0, donvi)
+
+    t_gia.delete(0, tk.END)
+    t_gia.insert(0, dongia)
+
+    t_congdung.delete(0, tk.END)
+    t_congdung.insert(0, congdung)
+frame_buttons_thuoc = tk.Frame(tab_thuoc)
+frame_buttons_thuoc.pack(fill="x", pady=5,before=tree_thuoc)
+
+tk.Button(frame_buttons_thuoc, text="Thêm", width=12, bg="#A9DFBF", command=add_thuoc).grid(row=0, column=0, padx=5)
+tk.Button(frame_buttons_thuoc, text="Sửa", width=12, bg="#F9E79F", command=sua_thuoc).grid(row=0, column=1, padx=5)
+tk.Button(frame_buttons_thuoc, text="Cập nhật", width=12, bg="#F5B7B1", command=update_thuoc).grid(row=0, column=2, padx=5)
+tk.Button(frame_buttons_thuoc, text="Tìm kiếm", width=12, bg="#D7BDE2", command=search_thuoc).grid(row=0, column=3, padx=5)
+tk.Button(frame_buttons_thuoc, text="Làm mới", width=12, bg="#D6EAF8", command=clear_thuoc).grid(row=0, column=4, padx=5)
+
+load_thuoc()
+#Tab chi tiết toa thuốc
 frame_info_ct = tk.LabelFrame(
     tab_cttoathuoc,
     text="THÔNG TIN CHI TIẾT TOA THUỐC",
@@ -793,12 +965,12 @@ left_ct = tk.Frame(frame_info_ct, bg="#EBF5FB")
 left_ct.grid(row=0, column=0, padx=20, sticky="nw")
 
 tk.Label(left_ct, text="Mã Phiếu Khám:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
-ct_mapk = ttk.Entry(left_ct,width=27)
-ct_mapk.grid(row=0, column=1, pady=5)
+ct_mapk_cttt = ttk.Entry(left_ct,width=27)
+ct_mapk_cttt.grid(row=0, column=1, pady=5)
 
 tk.Label(left_ct, text="Mã Thuốc:", bg="#EBF5FB").grid(row=1, column=0, sticky="w")
-ct_mathuoc = ttk.Entry(left_ct,width=27)
-ct_mathuoc.grid(row=1, column=1, pady=5)
+ct_mathuoc_cttt = ttk.Entry(left_ct,width=27)
+ct_mathuoc_cttt.grid(row=1, column=1, pady=5)
 
 # ---- CỘT PHẢI ----
 right_ct = tk.Frame(frame_info_ct, bg="#EBF5FB")
@@ -836,10 +1008,169 @@ tree_cttt.heading("LieuDung", text="Liều Dùng")
 
 # ===== ĐỘ RỘNG =====
 tree_cttt.column("MaPK", width=120)
-tree_cttt.column("MaThuoc", width=140)
-tree_cttt.column("SoLuong", width=120)
-tree_cttt.column("LieuDung", width=200)
+tree_cttt.column("MaThuoc", width=140,anchor="center")
+tree_cttt.column("SoLuong", width=120,anchor="center")
+tree_cttt.column("LieuDung", width=200,anchor="center")
 
 tree_cttt.pack(fill="both", expand=True)
+
+def clear_cttt():
+    ct_mapk_cttt.delete(0, tk.END)
+    ct_mathuoc_cttt.delete(0, tk.END)
+    ct_soluong.delete(0, tk.END)
+    ct_lieudung.delete(0, tk.END)
+
+#Load dữ liệu toa thuốc
+def load_cttoathuoc():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT MaPK, MaThuoc, SoLuong, LieuDung FROM ChiTietToaThuoc")
+    rows = cursor.fetchall()
+
+    tree_cttt.delete(*tree_cttt.get_children())
+
+    for row in rows:
+        tree_cttt.insert("", "end", values=row)
+
+def add_cttt():
+    MaPK = ct_mapk_cttt.get()
+    MaThuoc = ct_mathuoc_cttt.get()
+    SoLuong = ct_soluong.get()
+    LieuDung = ct_lieudung.get()
+
+    if not (MaPK and MaThuoc and SoLuong and LieuDung):
+        messagebox.showwarning("Thiếu dữ liệu", "Vui lòng nhập đầy đủ thông tin!")
+        return
+
+    try:
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        sql = """
+        INSERT INTO ChiTietToaThuoc (MaPK, MaThuoc, SoLuong, LieuDung)
+        VALUES (%s, %s, %s, %s)
+        """
+        cursor.execute(sql, (MaPK, MaThuoc, SoLuong, LieuDung))
+
+        conn.commit()
+        messagebox.showinfo("Thành công", "Đã thêm chi tiết toa thuốc!")
+
+    except Exception as e:
+        messagebox.showerror("Lỗi", f"Lỗi khi thêm dữ liệu:\n{e}")
+
+    finally:
+        cursor.close()
+        conn.close()
+def search_cttt():
+    MaPK = ct_mapk_cttt.get()
+    MaThuoc = ct_mathuoc_cttt.get()
+
+    if not (MaPK and MaThuoc):
+        messagebox.showwarning("Thiếu dữ liệu", "Nhập Mã PK và Mã Thuốc để tìm!")
+        return
+
+    try:
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        sql = "SELECT * FROM ChiTietToaThuoc WHERE MaPK = %s AND MaThuoc = %s"
+        cursor.execute(sql, (MaPK, MaThuoc))
+
+        result = cursor.fetchone()
+
+        if result:
+            ct_soluong.delete(0, tk.END)
+            ct_lieudung.delete(0, tk.END)
+
+            ct_soluong.insert(0, result[2])
+            ct_lieudung.insert(0, result[3])
+
+            messagebox.showinfo("Kết quả", "Đã tìm thấy!")
+        else:
+            messagebox.showwarning("Không tìm thấy", "Không có chi tiết toa thuốc này!")
+
+    except Exception as e:
+        messagebox.showerror("Lỗi", f"Lỗi khi tìm:\n{e}")
+
+    finally:
+        cursor.close()
+        conn.close()
+def update_cttt():
+    MaPK = ct_mapk_cttt.get().strip()
+    MaThuoc = ct_mathuoc_cttt.get().strip()
+    SoLuong = ct_soluong.get().strip()
+    LieuDung = ct_lieudung.get().strip()
+
+    if not (MaPK and MaThuoc):
+        messagebox.showwarning("Thiếu dữ liệu", "Cần Mã PK và Mã Thuốc để cập nhật!")
+        return
+
+    try:
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        sql = """
+        UPDATE chitiettoathuoc
+        SET SoLuong = %s, LieuDung = %s
+        WHERE MaPK = %s AND MaThuoc = %s
+        """
+        cursor.execute(sql, (SoLuong, LieuDung, MaPK, MaThuoc))
+        conn.commit()
+
+        if cursor.rowcount > 0:
+            messagebox.showinfo("Thành công", "Đã cập nhật!")
+            load_cttt()   # nhớ refresh bảng
+        else:
+            messagebox.showwarning("Không tìm thấy", "Không có chi tiết toa thuốc để cập nhật!")
+
+    except Exception as e:
+        messagebox.showerror("Lỗi", f"Lỗi khi cập nhật:\n{e}")
+
+    finally:
+        cursor.close()
+        conn.close()
+
+def delete_cttt():
+    MaPK = ct_mapk_cttt.get()
+    MaThuoc = ct_mathuoc_cttt.get()
+
+    if not (MaPK and MaThuoc):
+        messagebox.showwarning("Thiếu dữ liệu", "Nhập Mã PK và Mã Thuốc để xóa!")
+        return
+
+    if not messagebox.askyesno("Xác nhận", "Bạn có chắc muốn xóa không?"):
+        return
+
+    try:
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        sql = "DELETE FROM ChiTietToaThuoc WHERE MaPK = %s AND MaThuoc = %s"
+        cursor.execute(sql, (MaPK, MaThuoc))
+
+        conn.commit()
+
+        if cursor.rowcount > 0:
+            messagebox.showinfo("Thành công", "Đã xóa chi tiết!")
+            ct_soluong.delete(0, tk.END)
+            ct_lieudung.delete(0, tk.END)
+        else:
+            messagebox.showwarning("Không tìm thấy", "Không có chi tiết để xóa!")
+
+    except Exception as e:
+        messagebox.showerror("Lỗi", f"Lỗi khi xóa:\n{e}")
+
+    finally:
+        cursor.close()
+        conn.close()
+#Frame cho cttt
+frame_buttons_cttt = tk.Frame(tab_cttoathuoc)
+frame_buttons_cttt.pack(fill="x", pady=5,before=tree_cttt)
+
+tk.Button(frame_buttons_cttt, text="Thêm", width=12, bg="#A9DFBF", command=add_cttt).grid(row=0, column=0, padx=5)
+tk.Button(frame_buttons_cttt, text="Cập nhật", width=12, bg="#F9E79F", command=update_cttt).grid(row=0, column=1, padx=5)
+tk.Button(frame_buttons_cttt, text="Tìm kiếm", width=12, bg="#F5B7B1", command=search_cttt).grid(row=0, column=2, padx=5)
+tk.Button(frame_buttons_cttt, text="Xóa", width=12, bg="#D7BDE2", command=delete_cttt).grid(row=0, column=3, padx=5)
 load_cttoathuoc()
 root.mainloop()

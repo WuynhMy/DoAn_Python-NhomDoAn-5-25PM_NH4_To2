@@ -1,0 +1,295 @@
+TRƯỜNG ĐẠI HỌC AN GIANG
+KHOA CÔNG NGHỆ THÔNG TIN
+
+
+ 
+
+BÁO CÁO ĐỒ ÁN 
+CHUYÊN ĐỀ PYTHON (COS525)
+
+XÂY DỰNG ỨNG DỤNG QUẢN LÝ BỆNH NHÂN VỚI PYTHON, TKINTER VÀ MYSQL
+
+Giảng viên hướng dẫn:
+Ths.Nguyễn Ngọc Minh                    
+Sinh viên thực hiện:                 
+DPM245479-Nguyễn Ngọc Trạng Quỳnh – DH25PM_Nhom4_To2
+
+
+
+
+
+
+
+
+An Giang, 11/2025
+ 
+LỜI NÓI ĐẦU
+Kính gửi Thầy Nguyễn Ngọc Minh! 
+Em xin trân trọng gửi đến đồ án “Quản lý bệnh nhân”. Đồ án này được thực hiện trong học phần Chuyên đề Python, nhằm mục đích áp dụng các kiến thức và kỹ năng đã học được trong quá trình đào tạo.
+Em nhận thấy rằng việc quản lý bệnh nhân tại nhiều cơ sở y tế hiện nay vẫn còn tồn tại khá nhiều hạn chế. Phần lớn thông tin vẫn được lưu trữ bằng hồ sơ giấy hoặc các file rời rạc, dẫn đến tình trạng thất lạc dữ liệu, sai sót khi nhập thông tin và mất rất nhiều thời gian mỗi khi cần tra cứu. Điều này không chỉ ảnh hưởng đến hiệu quả làm việc của nhân viên y tế mà còn gây chậm trễ cho bệnh nhân trong quá trình khám chữa bệnh.
+Chính vì vậy, nhóm em lựa chọn nghiên cứu và xây dựng hệ thống quản lý bệnh nhân với mong muốn góp phần giải quyết những bất cập nói trên. Việc số hóa thông tin và tạo ra một hệ thống tập trung sẽ giúp quá trình theo dõi hồ sơ bệnh án trở nên nhanh chóng, chính xác hơn, đồng thời hỗ trợ bác sĩ và nhân viên y tế đưa ra quyết định kịp thời. Đây cũng là xu hướng tất yếu trong bối cảnh ngành y tế đang đẩy mạnh chuyển đổi số, yêu cầu các giải pháp công nghệ hiện đại nhằm tối ưu quy trình và nâng cao chất lượng dịch vụ.
+Ngoài ra, đề tài này cũng giúp nhóm em có cơ hội vận dụng những kiến thức đã học về phân tích, thiết kế gaio diện, xử lý dữ liệu và lập trình . Thông qua việc tiếp cận một bài toán thực tế, em có thể rèn luyện khả năng giải quyết vấn đề, tư duy logic và xây dựng phần mềm hoàn chỉnh. Với tính ứng dụng cao, đề tài “Quản lý bệnh nhân” không chỉ phù hợp với yêu cầu học tập mà còn có khả năng phát triển và mở rộng trong tương lai.Tuy nhiên, do kiến thức và kinh nghiệm còn hạn chế nên đồ án không tránh khỏi những thiếu sót. Em rất mong nhận được sự góp ý của thầy cô và các bạn để đề tài được hoàn thiện hơn. 
+
+Trân trọng./.
+
+
+
+
+
+
+
+Mục lục
+LỜI NÓI ĐẦU	1
+Phần I: ĐẶT VẤN ĐỀ	3
+1.1.TÍNH CẦN THIẾT CỦA ĐỀ TÀI	3
+1.2.MỤC TIÊU NGHIÊN CỨU CỦA ĐỀ TÀI	3
+1.2.1. Xây dựng thành công ứng dụng Quản lý bệnh nhân với giao diện trực quan, thân thiện và dễ sử dụng	3
+1.2.2. Thiết kế cơ sở dữ liệu MySQL để lưu trữ và quản lý thông tin một cách khoa học, an toàn	4
+1.2.3. Triển khai đầy đủ các chức năng quản lý dữ liệu (CRUD) và nghiệp vụ theo đúng mô hình của hệ thống	4
+PHẦN II: TỔNG QUAN VÀ CƠ SỞ LÝ THUYẾT	5
+2.1. ĐẶT VẤN ĐỀ	5
+2.2. LỊCH SỬ GIẢI QUYẾT VẤN ĐỀ	5
+2.3. PHẠM VI ĐỀ TÀI	7
+2.4. PHƯƠNG PHÁP NGHIÊN CỨU/HƯỚNG GIẢI QUYẾT VẤN ĐỀ	8
+2.5. CƠ SỞ LÝ THUYẾT	9
+PHẦN 3.Kết quả đạt được và Demo Code	11
+A. THIẾT KẾ GIAO DIỆN QUẢN LÝ BỆNH NHÂN	11
+B. CÁC BƯỚC XÂY DỰNG ỨNG DỤNG	14
+C. HƯỚNG DẪN CÀI ĐẶT & CODE ỨNG DỤNG	18
+DANH MỤC TÀI LIỆU THAM KHẢO	36
+
+
+
+
+
+Phần I: ĐẶT VẤN ĐỀ
+1.1.TÍNH CẦN THIẾT CỦA ĐỀ TÀI
+-Trong bối cảnh các cơ sở y tế ngày càng mở rộng quy mô và số lượng bệnh nhân gia tăng, việc quản lý thông tin bằng phương pháp thủ công như sổ sách, giấy tờ truyền thống bộc lộ nhiều hạn chế. Thực tế cho thấy, hồ sơ giấy dễ bị hư hỏng, thất lạc, khó bảo quản lâu dài và đặc biệt gây khó khăn trong quá trình tra cứu khi cần xem lại lịch sử khám chữa bệnh. Tại nhiều phòng khám tư hoặc các đơn vị y tế nhỏ, việc lưu trữ rời rạc khiến dữ liệu thiếu tính đồng bộ, nhân viên phải mất nhiều thời gian để tìm kiếm, xử lý thông tin, dẫn đến giảm hiệu quả công việc và kéo dài thời gian chờ của bệnh nhân.
+-Không chỉ vậy, quá trình ghi chép thủ công còn dễ xảy ra sai sót: thông tin nhập thiếu, nhập nhầm, trùng lặp hồ sơ hoặc khó theo dõi những bệnh nhân tái khám. Điều này ảnh hưởng trực tiếp đến chất lượng chăm sóc sức khỏe và công tác quản lý chuyên môn. Trong khi đó, ngành y tế hiện nay đang đẩy mạnh chuyển đổi số, yêu cầu các đơn vị phải ứng dụng công nghệ để nâng cao độ chính xác, tính bảo mật và tốc độ xử lý dữ liệu.
+-Vì vậy, việc xây dựng hệ thống quản lý bệnh nhân sử dụng Python (Tkinter) kết hợp với cơ sở dữ liệu MySQL là hoàn toàn cần thiết và phù hợp với thực tiễn. Hệ thống giúp lưu trữ thông tin tập trung, đảm bảo tính toàn vẹn dữ liệu, hỗ trợ nhân viên thao tác nhanh chóng như thêm – sửa – xóa – tìm kiếm bệnh nhân một cách khoa học. Đồng thời, phần mềm cũng tạo nền tảng để mở rộng các chức năng nâng cao trong tương lai như quản lý lịch hẹn, theo dõi bệnh án, thống kê báo cáo hoặc kết nối với các hệ thống y tế khác.
+-Từ những lý do trên, có thể khẳng định rằng việc thực hiện đề tài “Xây dựng phần mềm quản lý bệnh nhân” không chỉ mang ý nghĩa học thuật mà còn có giá trị thực tiễn cao, đáp ứng nhu cầu hiện nay của nhiều cơ sở khám chữa bệnh.
+1.2.MỤC TIÊU NGHIÊN CỨU CỦA ĐỀ TÀI
+Xây dựng một mô hình hoặc hệ thống hỗ trợ quản lý toàn bộ hoạt động quản lý bệnh nhân tại các bệnh viện bao gồm quản lý thông tin bệnh nhân,bácsĩ, quản lý phòng khám, phiếu khám, thuốc,chi tiết toa thuốc và phiếu khám nhằm nâng cao hiệu quả quản lý và chất lượng phục vụ khách hàng.
+1.2.1. Xây dựng thành công ứng dụng Quản lý bệnh nhân với giao diện trực quan, thân thiện và dễ sử dụng
+-Ứng dụng được phát triển bằng Python (Tkinter) với giao diện được bố trí rõ ràng theo từng chức năng nghiệp vụ, đảm bảo người dung đặc biệt là nhân viên y tế có thể thao tác nhanh chóng và chính xác. Các module chính được thiết kế bao gồm: Quản lý bệnh nhân, Quản lý phiếu khám, Quản lý bác sĩ , Quản lý phòng bệnh, Quản lý thuốc và Chi tiết toa thuốc.
+– Cung cấp các khung nhập liệu đầy đủ trường thông tin cần thiết cho từng đối tượng, hiển thị dữ liệu bằng bảng (Treeview) rõ ràng, khoa học, dễ theo dõi
+– Tối ưu giao diện để hỗ trợ người dùng tra cứu – cập nhật dữ liệu nhanh chóng, hạn chế sai sót khi nhập liệu. 
+– Giao diện ứng dụng hướng đến sự thân thiện, ổn định, đáp ứng tốt trong quá trình vận hành và có khả năng mở rộng thêm chức năng trong tương lai.
+1.2.2. Thiết kế cơ sở dữ liệu MySQL để lưu trữ và quản lý thông tin một cách khoa học, an toàn
+– Xây dựng mô hình cơ sở dữ liệu quan hệ (Relational Database) đầy đủ các bảng nghiệp vụ như: BenhNhan,Bacsi,PhongKham,…
+– Xác định khóa chính – khóa ngoại rõ ràng để đảm bảo tính toàn vẹn dữ liệu, tránh trùng lặp. 
+– Toàn bộ cơ sở dữ liệu được xây dựng nhằm hỗ trợ:
+                 +Quản lý bệnh nhân tập trung, nhất quán.
+                 +Theo dõi quá trình khám bệnh theo thời gian.
+                 +Quản lý kê đơn – cấp phát thuốc rõ ràng.
+                 +Tăng khả năng tra cứu và khai thác dữ liệu nhanh chóng
+– MySQL được lựa chọn vì khả năng xử lý ổn định, tốc độ truy vấn nhanh và hỗ trợ bảo mật dữ liệu tốt, đảm bảo an toàn cho thông tin bệnh nhân.
+1.2.3. Triển khai đầy đủ các chức năng quản lý dữ liệu (CRUD) và nghiệp vụ theo đúng mô hình của hệ thống
+– Quản lý bệnh nhân: Cung cấp đầy đủ chức năng Thêm – Sửa – Xóa – Tìm kiếm bệnh nhân.Theo dõi chi tiết thông tin cá nhân, phòng điều trị và loại bệnh nhân. Hỗ trợ tìm kiếm nhanh theo tên, mã bệnh nhân hoặc loại bệnh nhân.
+– Quản lý phòng bệnh: Cho phép thêm và chỉnh sửa thông tin bác sĩ, bao gồm họ tên, khoa, địa chỉ. Quản lý danh mục phòng bệnh, loại phòng và mã phòng. Các mục này được dùng để gán cho phiếu khám hoặc bệnh nhân.
+– Quản lý phiếu khám: Lưu trữ thông tin chi tiết mỗi lần bệnh nhân đi khám: ngày khám, loại khám, chẩn đoán, bác sĩ phụ trách.Kết nối trực tiếp với bệnh nhân và bác sĩ theo đúng mối quan hệ trong diagram. Hỗ trợ tìm kiếm lịch sử khám theo bệnh nhân hoặc theo bác sĩ.
+– Quản lý thuốc và toa thuốc : Hiển thị danh sách thuốc sẵn có và cho phép gán thuốc vào từng phiếu khám. Mỗi toa thuốc gồm đầy đủ: tên thuốc, số lượng, liều dùng. Liên kết giữa thuốc và phiếu khám đảm bảo theo dõi chính xác đơn thuốc đã kê cho từng bệnh nhân.
+PHẦN II: TỔNG QUAN VÀ CƠ SỞ LÝ THUYẾT 
+2.1. ĐẶT VẤN ĐỀ
+-Trong bối cảnh hiện nay, hệ thống y tế Việt Nam đang phải đối mặt với nhu cầu khám chữa bệnh ngày càng tăng mạnh, đặc biệt tại các bệnh viện tuyến quận/huyện và các phòng khám tư nhân. Sự gia tăng số lượng bệnh nhân kéo theo khối lượng dữ liệu lớn cần được quản lý một cách chính xác và khoa học, bao gồm: thông tin cá nhân của bệnh nhân, hồ sơ bệnh án, bác sĩ phụ trách, lịch khám, đơn thuốc, chi phí điều trị và tình trạng phòng bệnh. Việc xử lý và cập nhật thủ công những thông tin này là một thách thức lớn đối với các cơ sở y tế có hạn chế về nhân lực và công nghệ.
+-Trong khi đó, các cơ sở y tế ngày càng mong muốn có một hệ thống quản lý hiện đại, tiết kiệm chi phí, dễ sử dụng và phù hợp với mô hình hoạt động thực tế. Một hệ thống có khả năng lưu trữ dữ liệu tập trung, cho phép tra cứu nhanh, hỗ trợ theo dõi hồ sơ bệnh án, quản lý bác sĩ, phòng bệnh và đơn thuốc một cách hiệu quả.
+-Chính vì những nhu cầu cấp thiết đó, việc xây dựng hệ thống quản lý bệnh nhân bằng Python kết hợp MySQL trở thành một giải pháp phù hợp và khả thi. Hệ thống này không chỉ giúp tự động hóa quy trình quản lý, giảm tải khối lượng công việc cho nhân viên y tế mà còn nâng cao chất lượng dịch vụ y tế.
+2.2. LỊCH SỬ GIẢI QUYẾT VẤN ĐỀ
+2.2.1. Quản lý bệnh nhân bằng sổ sách truyền thống
+Trước khi các hệ thống thông tin y tế phát triển, hầu hết bệnh viện và phòng khám đều quản lý bệnh nhân bằng hồ sơ giấy và sổ ghi chép thủ công. Việc lưu trữ hồ sơ bằng giấy gây ra nhiều hạn chế:
+– Dễ sai sót khi ghi chép thông tin bệnh nhân, toa thuốc, kết quả khám.
+– Mất nhiều thời gian tra cứu, đặc biệt khi số lượng bệnh nhân lớn.
+– Khó theo dõi lịch sử khám bệnh đầy đủ và chính xác.
+– Rủi ro thất lạc hồ sơ, hư hỏng do thời gian hoặc điều kiện lưu trữ.
+– Không thể thống kê nhanh số liệu phục vụ báo cáo hoặc quản lý.
+2.2.2. Quản lý bằng các phần mềm quản lý quy mô nhỏ
+Một số cơ sở y tế nhỏ chuyển sang sử dụng các phần mềm quản lí có mức quy mô nhỏ để quản lý bệnh nhân. Tuy nhiên, phương pháp này vẫn tồn tại nhiều hạn chế:
+   – Không cập nhật tự động thông tin giữa các bảng (bệnh nhân – khám bệnh – toa thuốc).
+– Giao diện đơn giản, chủ yếu tập trung vào chức năng nên chưa đạt tính trực quan hoặc thân thiện người dùng.
+– Chưa xử lý được lượng dữ liệu lớn, chưa có kiến trúc tối ưu
+– Ít đề tài tiếp cận các nghiệp vụ nâng cao như lưu trữ EMR (hồ sơ y tế điện tử), quản lý cận lâm sàng, tích hợp bảo hiểm y tế.
+ – Không hỗ trợ thao tác nhiều người dùng cùng lúc, gây bất tiện cho hoạt động khám chữa bệnh.
+2.2.3. Sử dụng phần mềm quản lý bệnh viện phổ thông (HIS)
+Nhiều cơ sở y tế đã triển khai các phần mềm như HIS, EMR hoặc phần mềm quản lý phòng khám tư nhân. Các hệ thống này giúp tự động hóa quy trình nhưng vẫn tồn tại một số hạn chế:
+– Chi phí cao, đòi hỏi hạ tầng và đội ngũ kỹ thuật để vận hành.
+  – Một số hệ thống phức tạp, không phù hợp với quy mô nhỏ hoặc nhu cầu đơn giản.
+– Thiếu khả năng tùy chỉnh theo từng mô hình bệnh viện hoặc yêu cầu học thuật.
+– Một số chức năng vượt ngoài phạm vi đồ án (bảo hiểm y tế, cận lâm sàng, xét nghiệm).
+– Khó tiếp cận đối với sinh viên hoặc người mới học về cơ sở dữ liệu.
+2.2.4. Các nghiên cứu liên quan
+Nhiều đề tài sinh viên trước đây đã xây dựng các hệ thống quản lý bệnh nhân, quản lý toa thuốc hoặc quản lý phòng khám. Tuy nhiên, phần lớn chỉ dừng lại ở mô hình cơ bản, chưa mô phỏng đầy đủ quy trình khám chữa bệnh.và còn kèm theo một số hạn chế như:
+– Một số nghiên cứu khác tập trung vào quản lý hồ sơ y tế điện tử,nhưng yêu cầu kiến thức chuyên sâu và khó áp dụng vào mô hình học thuật của sinh viên.
+– Các hệ thống hiện tại vẫn chưa tối ưu về giao diện, phân quyền, tính
+bảo mật và khả năng mở rộng
+2.3. PHẠM VI ĐỀ TÀI
+Đề tài “Quản lý Bệnh nhân” được xây dựng với mục tiêu mô phỏng quy trình quản lý trong phạm vi một phòng khám nhỏ hoặc khoa bệnh viện, không nhằm thay thế các hệ thống quản lý y tế quy mô lớn như HIS hay EMR. Hệ thống tập trung vào các nghiệp vụ cơ bản và cần thiết nhất liên quan đến quá trình tiếp nhận và quản lý thông tin bệnh nhân.
+	2.3.1. Phạm vi chức năng
+	–Quản lý hồ sơ bệnh nhân
+	–Quản lý danh mục thuốc
+	–Quản lý phiếu khám đơn thuốc
+	–Báo cáo-thống kê số lượng bệnh nhân,thuốc đã kê,xuất danh sách bệnh nhân khi cần thiết
+*Hệ thống không xử lý chức năng nâng cao như lập lịch khám online, kết nối liên khoa, quản lý viện phí, liên thông dữ liệu với BHYT hoặc hệ thống HIS thực tế. Đây chỉ là mô hình quản lý nội bộ của một phòng khám nhỏ.
+2.3.2. Phạm vi đối tượng
+–Hệ thống được xây dựng hướng đến hai nhóm người sử dụng chính:
++Nhóm đầu tiên là quản trị viên (Admin): những người có quyền truy cập toàn bộ chức năng của hệ thống. Họ có thể thêm, sửa hoặc xóa thông tin bệnh nhân, thuốc, bác sĩ,… và được phép xem các báo cáo thống kê tổng hợp. Quyền quản trị này giúp họ theo dõi hoạt động chung của phòng khám, đồng thời kiểm soát tính toàn vẹn của dữ liệu.
++Nhóm thứ hai là nhân viên phòng khám(Y tá,điều dưỡng,lễ tân bệnh viện): Những người này chỉ được phép sử dụng các chức năng phục vụ trực tiếp cho thao tác nghiệp vụ hằng ngày, bao gồm lập phiếu khám, tra cứu thông tin bệnh nhân, ghi nhận chẩn đoán và kê đơn thuốc. Họ không được phép can thiệp vào danh mục thuốc hoặc các báo cáo thống kê để đảm bảo tính bảo mật và tránh sai sót ảnh hưởng đến dữ liệu quan trọng.
+	–Việc phân chia rõ ràng phạm vi đối tượng trong hệ thống quản lý bệnh nhân mang lại nhiều ý nghĩa quan trọng đối với cả quá trình thiết kế phần mềm lẫn vận hành thực tế. Việc xác định đúng ai là người sử dụng giúp hệ thống được xây dựng một cách có định hướng, tránh việc phát triển lan man hoặc thêm những chức năng không cần thiết. Khi phân quyền rạch ròi giữa quản trị viên và nhân viên, hệ thống vừa đáp ứng đúng nhu cầu nghiệp vụ của từng nhóm, vừa đảm bảo dữ liệu quan trọng không bị thay đổi ngoài ý muốn.
+2.4. PHƯƠNG PHÁP NGHIÊN CỨU/HƯỚNG GIẢI QUYẾT VẤN ĐỀ
+–Để giải quyết bài toán xây dựng hệ thống quản lý bệnh nhân, đề tài sử dụng kết hợp nhiều phương pháp nghiên cứu nhằm đảm bảo tính đầy đủ, chính xác và khả thi.
+	2.4.1. Phương pháp thu thập tài liệu
+–Trước hết, đề tài áp dụng phương pháp nghiên cứu lý thuyết, tập trung tìm hiểu các kiến thức nền tảng về cơ sở dữ liệu, mô hình quản lý bệnh viện, quy trình khám chữa bệnh, cũng như các tài liệu tham khảo về tiêu chuẩn lưu trữ thông tin y tế. Song song đó, đề tài sử dụng phương pháp khảo sát – điều tra thông qua việc quan sát quy trình làm việc tại một số phòng khám nhỏ, kết hợp phỏng vấn người dùng như lễ tân và bác sĩ. Các hoạt động này nhằm thu thập yêu cầu thực tế để làm ra phần mềm phù hợp với thực tiễn
+2.4.2. Phương pháp phân tích thiết kế hệ thống
+– Sử dụng các mô hình phân tích: 
++ Sơ đồ Use Case. 
++ Sơ đồ thực thể – liên kết (ERD). 
++ Sơ đồ luồng dữ liệu (DFD). 
++ Sơ đồ quy trình nghiệp vụ. 
+– Nhằm mô hình hóa yêu cầu hệ thống đầy đủ và logic
+	2.4.3. Phương pháp thực nghiệm và đánh giá
+	–Cuối cùng, đề tài sử dụng phương pháp đánh giá – kiểm thử nhằm kiểm tra tính chính xác của dữ liệu, tính đầy đủ của chức năng và độ tương thích của hệ thống. Những lỗi phát hiện trong quá trình kiểm thử được điều chỉnh kịp thời, giúp hoàn thiện phần mềm trước khi đưa vào sử dụng.Cùng với đó phải thông qua việc thu thập phản hồi từ người dùng để có hướng điều chỉnh hệ thống để đạt hiệu quả tối ưu.
+2.5. CƠ SỞ LÝ THUYẾT 
+2.5.1. Lý thuyết về ngôn ngữ lập trình python và thư viện Tkinter
+Python là ngôn ngữ lập trình bậc cao, cú pháp rõ ràng và dễ đọc, thường được sử dụng trong phát triển ứng dụng, phân tích dữ liệu và tự động hóa. Python hỗ trợ lập trình hướng đối tượng, lập trình thủ tục và có thư viện phong phú phục vụ nhiều mục đích khác nhau. Python cung cấp cú pháp đơn giản, dễ phát triển và có thư viện hỗ trợ phong phú. Trong đó, Tkinter được sử dụng làm thư viện xây dựng giao diện người dùng (GUI), giúp tạo các cửa sổ thao tác như đăng nhập, quản lý bệnh nhân, lập phiếu khám và quản lý thuốc. Lý thuyết về lập trình sự kiện (event-driven programming) cũng được áp dụng để xử lý các thao tác như nhấn nút, nhập dữ liệu và hiển thị bảng thông tin.
+2.5.2. Lý thuyết về mô hình CRUD
+CRUD là viết tắt của bốn thao tác cơ bản trong quản lý dữ liệu: Create – Read – Update – Delete. Đây là mô hình nền tảng được áp dụng trong hầu hết các hệ thống thông tin hiện đại.
++Create (Tạo mới): Thực hiện thêm một bản ghi mới vào cơ sở dữ liệu. Trong hệ thống quản lý bệnh nhân, thao tác này được dùng để thêm hồ sơ bệnh nhân mới, tạo phiếu khám mới hoặc thêm thông tin thuốc vào danh mục.
++Read (Đọc / Tra cứu): Truy xuất và hiển thị dữ liệu đã có. Đây là thao tác quan trọng dùng để tra cứu thông tin bệnh nhân, xem danh sách thuốc, xem lịch sử khám hoặc tìm kiếm dữ liệu phục vụ báo cáo.
++Update (Cập nhật): Thay đổi thông tin của bản ghi đang tồn tại. Ví dụ: cập nhật địa chỉ bệnh nhân, chỉnh sửa nội dung phiếu khám, điều chỉnh số lượng thuốc hay thay đổi đơn giá.
++Delete (Xóa): Loại bỏ dữ liệu không còn cần thiết, chẳng hạn như xóa hồ sơ bệnh nhân nhầm, xóa phiếu khám bị hủy hoặc gỡ những loại thuốc không còn được sử dụng trong phòng khám.
+Trong đề tài quản lý bệnh nhân, mô hình CRUD được áp dụng xuyên suốt đối với các đối tượng chính như bệnh nhân – thuốc – phiếu khám – đơn thuốc – người dùng hệ thống. Việc triển khai CRUD giúp hệ thống vận hành đúng nghiệp vụ, dễ bảo trì, dễ mở rộng và đảm bảo dữ liệu luôn được tổ chức rõ ràng, nhất quán.
+2.5.3. Lý thuyết về phân tích và thiết kế hệ thống thông tin
+Phân tích hệ thống tập trung vào việc thu thập và làm rõ yêu cầu của người dùng, bao gồm việc xác định ai là người dùng hệ thống, hệ thống cần quản lý những loại dữ liệu nào, các quy trình nghiệp vụ diễn ra ra sao và những vấn đề tồn tại trong phương pháp quản lý cũ. Trong đề tài này, phân tích hệ thống giúp xác định rõ các chức năng như quản lý bệnh nhân, quản lý thuốc, lập phiếu khám, quản lý đơn thuốc, và phân quyền người dùng.
+Thiết kế hệ thống là bước chuyển hóa yêu cầu đã phân tích thành cấu trúc phần mềm cụ thể. Nội dung thiết kế bao gồm thiết kế cơ sở dữ liệu MySQL (các bảng, khóa, mối quan hệ), thiết kế mô hình dữ liệu (ERD), thiết kế luồng xử lý thông tin, cấu trúc giao diện Tkinter và bố cục các chức năng của chương trình. Việc thiết kế khoa học giúp hệ thống vận hành ổn định, dễ mở rộng và thuận lợi khi cài đặt trong thực tế.
+Quy trình phân tích và thiết kế được áp dụng xuyên suốt trong quá trình phát triển phần mềm, giúp đảm bảo sản phẩm cuối cùng vừa chính xác về mặt nghiệp vụ, vừa hợp lý về mặt kỹ thuật.
+
+
+
+
+
+
+
+
+
+
+
+
+PHẦN 3.Kết quả đạt được và Demo Code
+A. THIẾT KẾ GIAO DIỆN QUẢN LÝ BỆNH NHÂN
+ 
+Hình 1:Giao diện quản lý bệnh nhân
+ 
+Hình 2:Giao diện quản lý phòng bệnh
+ 
+Hinh 3:Gaio diện quản lý phiếu khám bệnh
+ 
+Hình 4:Giao diện quản lý thuốc
+ Hình 5:Giao diện quản lý chi tiết toa thuốc
+B. CÁC BƯỚC XÂY DỰNG ỨNG DỤNG
+Để xây dựng ứng dụng quản lý sản phẩm bằng Python, Tkinter và MySQL, cần cài đặt các thư viện cần thiết, thiết kế cơ sở dữ liệu MySQL để lưu trữ thông tin sản phẩm, sử dụng Tkinter để tạo giao diện người dùng, và kết hợp Python với thư viện mysql.connector để thực hiện các thao tác như thêm, xóa, sửa, và hiển thị danh sách Bệnh Nhân
+1.Cài đặt các thư viện cần thiết
+ 
+Hình 6:Đã cài đặt python
+ 
+Hình 7:Tải và tạo một CSDL cho ứng dụng
+ 
+Hình8:Cài đặt thư viện để kết nối Python với CSDL
+2. Thiết kế cơ sở dữ liệu MySQL
+ 
+Hình 9:Bảng CSDL MySQL để lưu trữ thông tin bệnh nhân
+3. Xây dựng giao diện người dùng (GUI) bằng Tkinter:
++Sử dụng thư viện Tkinter trong Python để thiết kế giao diện phần mềm quản lý Bệnh nhân. Giao diện phải trực quan, dễ thao tác và đảm bảo hỗ trợ đầy đủ các chức năng xử lý thông tin bệnh nhân.
++Ứng dụng cần cung cấp các trường nhập liệu (Entry), hộp chọn (Combobox), nút chức năng (Button) và bảng hiển thị dữ liệu (Treeview) để phục vụ việc tương tác với hệ thống.
++Hệ thống giao diện cho phép người dùng thực hiện các chức năng chính sau:
+1.Thêm mới thông tin bệnh nhân:Cho phép nhập mã bệnh nhân, họ tên, ngày sinh, giới tính, địa chỉ, loại bệnh nhân (Nội trú hoặc Ngoại trú) và mã phòng (nếu là nội trú).
+2.Lưu thông tin bệnh nhân vào cơ sở dữ liệu
+3.Chỉnh sửa thông tin bệnh nhân:Hỗ trợ lựa chọn một bệnh nhân trong bảng danh sách và sửa đổi các thông tin liên quan rồi ghi đè lại dữ liệu cũ.
+4.Xóa thông tin bệnh nhân:Cho phép loại bỏ một bệnh nhân khỏi danh sách dựa trên mã bệnh nhân hoặc lựa chọn trực tiếp trên bảng.
+5.Tìm kiếm bệnh nhân theo mã bệnh nhân:Người dùng nhập mã bệnh nhân để tra cứu nhanh thông tin, giúp dễ dàng quản lý và truy xuất dữ liệu.
+7.Lưu thông tin phòng bệnh  vào CSDL
++Giao diện cần được bố trí khoa học, rõ ràng, dễ nhìn và có thông báo lỗi khi dữ liệu nhập không hợp lệ, giúp người dùng dễ sử dụng và hạn chế sai sót trong quá trình thao tác.
+
+
+4. Viết mã Python kết nối cơ sở dữ liệu:
+•	Lưu trữ thông tin bệnh nhân một cách khoa học và an toàn.
+•	Chỉnh sửa nhanh chóng khi có thay đổi.
+•	Xóa bệnh nhân khi không còn điều trị.
+•	Tìm kiếm theo nhiều tiêu chí (mã số bệnh nhân)
+•	Đảm bảo tính toàn vẹn dữ liệu (data integrity) thông qua các ràng buộc trên database.
+
+ 
+Hình 10:Code để kết nối với MySQL Sever
+Viết các hàm 
+ 
+Hình 11: Hàm thêm bệnh nhân
+
+ 
+Hình 12:Hàm tìm kiếm bệnh nhân bằng mã số
+5. Xây dựng giao diện Tkinter
+Giao diện Tkinter được xây dựng để người dùng có thể thao tác trực tiếp với dữ liệu bệnh nhân.Các nút bấm trên giao diện được liên kết với các hàm Python để xử lý dữ liệu và tương tác với cơ sở dữ liệu.
++. Thêm bệnh nhân
+Người dùng nhập mã bệnh nhân, họ tên, ngày sinh, giới tính, địa chỉ, loại bệnh nhân và mã phòng (nếu nội trú), sau đó nhấn “Thêm”.
+Python sẽ lấy dữ liệu từ các ô nhập và thực hiện câu lệnh INSERT để lưu vào bảng BenhNhan.
++. Xóa bệnh nhân
+Người dùng chọn một dòng trong danh sách và nhấn “Xóa”.
+Python sẽ lấy mã bệnh nhân của dòng được chọn và thực hiện DELETE FROM BenhNhan để xóa bản ghi trong cơ sở dữ liệu.
++. Sửa thông tin bệnh nhân
+Người dùng chọn bệnh nhân muốn sửa, thông tin sẽ được đưa vào các ô nhập.Sau khi chỉnh sửa và nhấn “Lưu/Sửa”, Python sẽ thực hiện câu lệnh UPDATE để cập nhật dữ liệu.
++. Tìm kiếm bệnh nhân
+Người dùng nhập mã hoặc tên bệnh nhân và nhấn “Tìm”.
+Python truy vấn theo điều kiện và hiển thị kết quả lên Treeview.
++ Xem thông tin bệnh nhân: 
+Khi người dùng mở cửa sổ ứng dụng, mã Python sẽ truy vấn cơ sở dữ liệu, lấy tất thông tin bệnh nhân sẽ hiển thị 
+C. HƯỚNG DẪN CÀI ĐẶT & CODE ỨNG DỤNG 
++Giao diện nhập thông tin bệnh nhân (Mã bệnh nhân, Họ lót, Tên , Phái,Ngày sinh,địa chỉ loại dịch vụ). 
++Chức năng tìm kiếm và cập nhật.
+Bảng danh sách thông tin bệnh nhân,phòng bệnh,phiếu khám,thuốc,chi tiết toa thuốc 
+Chức năng CRUD (Thêm, Sửa, Xóa, Lưu). 
+Dữ liệu lưu trực tiếp vào SQLServer Database (không mất khi tắt ứng dụng). 
+Tạo CSDL cho ứng dụng
+ 
+ 
+*INSERT DỮ LIỆU VÀO BẢNG
+ 
+ 
+Hình 13 : Thêm dữ liệu vào 
+*Hình ảnh bài code 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+DANH MỤC TÀI LIỆU THAM KHẢO
+[1] TS. Huỳnh Phước Hải, TS. Nguyễn Văn Hòa, Giáo trình lập trình Python, Trường Đại học An Giang – ĐHQG TP. Hồ Chí Minh.

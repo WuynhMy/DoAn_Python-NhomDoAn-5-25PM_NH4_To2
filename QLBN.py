@@ -59,7 +59,6 @@ def load_bacsi():
         tree_bs.insert("", "end", values=row)
 
     conn.close()
-#Load dữ liệu phiếu khám
 def load_phieukham():
     conn = connect_db()
     cursor = conn.cursor()
@@ -144,27 +143,6 @@ tk.Label(root,
          fg="#1B4F72",
          bg="#EBF5FB").pack(pady=20)
 
-# ======= KHUNG NÚT DÙNG CHUNG CHO TẤT CẢ TAB =======
-frame_buttons = tk.Frame(root, bg="#EBF5FB")
-frame_buttons.pack(pady=10)
-
-def make_btn(parent, text, color):
-    return tk.Button(
-        parent, text=text, width=12,
-        font=("Segoe UI", 12, "bold"),
-        bg=color, fg="black", relief="ridge", bd=2
-    )
-
-btn_add = make_btn(frame_buttons, "Thêm", "#58D68D")
-btn_edit = make_btn(frame_buttons, "Sửa", "#F5B041")
-btn_delete = make_btn(frame_buttons, "Xóa", "#EC7063")
-btn_clear = make_btn(frame_buttons, "Làm mới", "#D7DBDD")
-
-btn_add.grid(row=0, column=0, padx=12)
-btn_edit.grid(row=0, column=1, padx=12)
-btn_delete.grid(row=0, column=2, padx=12)
-btn_clear.grid(row=0, column=3, padx=12)
-
 # ============= NOTEBOOK =============
 notebook = ttk.Notebook(root)
 notebook.pack(fill="both", expand=True, padx=20, pady=10)
@@ -173,7 +151,7 @@ tab_bn = ttk.Frame(notebook)
 notebook.add(tab_bn, text="Bệnh Nhân")
 tab_phongbenh=ttk.Frame(notebook)
 notebook.add(tab_phongbenh,text="Phòng Bệnh")
-tab_bacsi =ttk.Notebook(notebook)
+tab_bacsi =ttk.Frame(notebook)
 notebook.add(tab_bacsi, text="Bác Sĩ")
 tab_phieukham = ttk.Frame(notebook)
 notebook.add(tab_phieukham,text="Phiếu Khám")
@@ -354,6 +332,22 @@ tk.Label(right_col, text="Địa chỉ:", bg="#EBF5FB").grid(row=0, column=0, st
 entry_diachi = ttk.Entry(right_col, width=40)
 entry_diachi.grid(row=1, column=0, pady=5, sticky="w")
 
+# ===== KHUNG NÚT CHỨC NĂNG =====
+frame_buttons = tk.Frame(tab_bacsi, bg="#EBF5FB")
+frame_buttons.pack(fill="x", pady=10)
+
+btn_them = tk.Button(frame_buttons, text="Thêm", width=12, bg="#D4E6F1")
+btn_them.grid(row=0, column=0, padx=10)
+
+btn_sua = tk.Button(frame_buttons, text="Sửa", width=12, bg="#D4E6F1")
+btn_sua.grid(row=0, column=1, padx=10)
+
+btn_xoa = tk.Button(frame_buttons, text="Xóa", width=12, bg="#D4E6F1")
+btn_xoa.grid(row=0, column=2, padx=10)
+
+btn_lam_moi = tk.Button(frame_buttons, text="Làm mới", width=12, bg="#D4E6F1")
+btn_lam_moi.grid(row=0, column=3, padx=10)
+
 # --- KHUNG BẢNG DƯỚI ---
 frame_table = tk.LabelFrame(
     tab_bacsi, text="Danh sách bác sĩ",
@@ -364,7 +358,7 @@ frame_table = tk.LabelFrame(
 frame_table.pack(fill="both", expand=True, padx=10, pady=10)
 
 # --- BẢNG TREEVIEW ---
-columns_bacsi = ("Mã Bác Sĩ", "Họ Lót", "Tên","Địa Chỉ")
+columns_bacsi = ("Mã Bác Sĩ", "Họ Lót", "Tên","Khoa Khám","Địa Chỉ")
 
 tree_bs = ttk.Treeview(frame_table, columns=columns_bacsi, show="headings", height=12)
 tree_bs.pack(fill="both", expand=True)
@@ -372,7 +366,87 @@ tree_bs.pack(fill="both", expand=True)
 for col in columns_bacsi:
     tree_bs.heading(col, text=col)
     tree_bs.column(col, width=150)
-    load_bacsi()
+load_bacsi() 
+# ======================= HÀM CRUD =======================
+
+def clear_bacsi():
+    entry_mabs.delete(0, tk.END)
+    entry_holot.delete(0, tk.END)
+    entry_ten.delete(0, tk.END)
+    combo_khoa.set("")
+    entry_diachi.delete(0, tk.END)
+
+def add_bacsi():
+    mabs = entry_mabs.get()
+    holot = entry_holot.get()
+    ten = entry_ten.get()
+    khoa = combo_khoa.get()
+    diachi = entry_diachi.get()
+
+    if mabs == "" or ten == "":
+        print("Thiếu dữ liệu")
+        return
+
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+    INSERT INTO BacSi (MaBS, HoLot, Ten, Khoa, DiaChi)
+    VALUES (%s, %s, %s, %s, %s)
+""", (mabs, holot, ten, khoa, diachi))
+        conn.commit()
+        load_bacsi()
+        clear_bacsi()
+    except Exception as e:
+        print("Lỗi thêm:", e)
+    conn.close()
+
+def edit_bacsi():
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+    UPDATE BacSi SET HoLot=%s, Ten=%s, Khoa=%s, DiaChi=%s
+    WHERE MaBS=%s
+""", (entry_holot.get(), entry_ten.get(),
+      combo_khoa.get(), entry_diachi.get(),
+      entry_mabs.get()))
+        conn.commit()
+        load_bacsi()
+    except Exception as e:
+        print("Lỗi sửa:", e)
+    conn.close()
+
+def delete_bacsi():
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("DELETE FROM BacSi WHERE MaBS=%s", (entry_mabs.get(),))
+        conn.commit()
+        load_bacsi()
+        clear_bacsi()
+    except Exception as e:
+        print("Lỗi xóa:", e)
+    conn.close()
+
+def on_tree_bs_select(event):
+    selected = tree_bs.focus()
+    if not selected:
+        return
+
+    values = tree_bs.item(selected, "values")
+
+    entry_mabs.delete(0, tk.END)
+    entry_holot.delete(0, tk.END)
+    entry_ten.delete(0, tk.END)
+    combo_khoa.set("")
+    entry_diachi.delete(0, tk.END)
+    entry_mabs.insert(0, values[0])
+    entry_holot.insert(0, values[1])
+    entry_ten.insert(0, values[2])
+    combo_khoa.set(values[3])
+    entry_diachi.insert(0, values[4])
+tree_bs.bind("<<TreeviewSelect>>", on_tree_bs_select)
 # =====================
 # TAB PHIẾU KHÁM
 # =====================
@@ -385,7 +459,6 @@ frame_info_pk = tk.LabelFrame(
     padx=15, pady=15
 )
 frame_info_pk.pack(fill="x", padx=20, pady=10)
-
 
 # ==== MÃ BỆNH NHÂN ====
 tk.Label(frame_info_pk, text="Mã bệnh nhân:", bg="#EBF5FB").grid(row=0, column=0, sticky="w")
@@ -531,6 +604,140 @@ t_soluong.grid(row=1, column=1, pady=5)
 tk.Label(right_t, text="Công dụng:", bg="#EBF5FB").grid(row=2, column=0, sticky="w")
 t_congdung = ttk.Entry(right_t, width=30)
 t_congdung.grid(row=2, column=1, pady=5)
+
+
+#Chức năng cho bác sĩ
+def on_add():
+    tab = notebook.tab(notebook.select(), "text")
+
+    if tab == "Bác Sĩ":
+     add_bacsi()
+
+def on_edit():
+    tab = notebook.tab(notebook.select(), "text")
+    if tab == "Bác Sĩ":
+        edit_bacsi()
+
+
+def on_delete():
+    tab = notebook.tab(notebook.select(), "text")
+    if tab == "Bác Sĩ":
+        delete_bacsi()
+
+
+def on_clear():
+    tab = notebook.tab(notebook.select(), "text")
+    if tab == "Bác Sĩ":
+        clear_bacsi()
+
+
+# =============================
+#  CRUD CHO BÁC SĨ
+# =============================
+
+def clear_bacsi():
+    entry_mabs.delete(0, tk.END)
+    entry_holot.delete(0, tk.END)
+    entry_ten.delete(0, tk.END)
+    combo_khoa.set("")
+    entry_diachi.delete(0, tk.END)
+
+
+def add_bacsi():
+    mabs = entry_mabs.get().strip()
+    holot = entry_holot.get().strip()
+    ten = entry_ten.get().strip()
+    khoa = combo_khoa.get().strip()
+    diachi = entry_diachi.get().strip()
+
+    if mabs == "" or ten == "":
+        print("Thiếu dữ liệu: MaBS, Ten")
+        return
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "INSERT INTO BacSi (MaBS, HoLot, Ten, Khoa, DiaChi) VALUES (?, ?, ?, ?, ?)",
+            (mabs, holot, ten, khoa, diachi)
+        )
+        conn.commit()
+        load_bacsi()
+        clear_bacsi()
+    except Exception as e:
+        print("Lỗi thêm:", e)
+
+    conn.close()
+
+
+def edit_bacsi():
+    mabs = entry_mabs.get().strip()
+
+    if mabs == "":
+        print("Chưa chọn bác sĩ để sửa")
+        return
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("""
+            UPDATE BacSi SET
+                HoLot=?, Ten=?, Khoa=?, DiaChi=?
+            WHERE MaBS=?
+        """, (
+            entry_holot.get(),
+            entry_ten.get(),
+            combo_khoa.get(),
+            entry_diachi.get(),
+            mabs
+        ))
+
+        conn.commit()
+        load_bacsi()
+    except Exception as e:
+        print("Lỗi sửa:", e)
+
+    conn.close()
+
+
+def delete_bacsi():
+    mabs = entry_mabs.get().strip()
+
+    if mabs == "":
+        print("Chưa chọn bác sĩ để xóa")
+        return
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("DELETE FROM BacSi WHERE MaBS=?", (mabs,))
+        conn.commit()
+        load_bacsi()
+        clear_bacsi()
+    except Exception as e:
+        print("Lỗi xóa:", e)
+
+    conn.close()
+
+def select_bacsi(event):
+    selected = tree_bs.focus()
+    if not selected:
+        return
+
+    values = tree_bs.item(selected, "values")
+    entry_mabs.delete(0, tk.END)
+    entry_holot.delete(0, tk.END)
+    entry_ten.delete(0, tk.END)
+    entry_diachi.delete(0, tk.END)
+
+    entry_mabs.insert(0, values[0])
+    entry_holot.insert(0, values[1])
+    entry_ten.insert(0, values[2])
+    combo_khoa.set(values[3])
+    entry_diachi.insert(0, values[4])
 
 # ===== KHUNG BẢNG THUỐC =====
 frame_table_t = tk.LabelFrame(

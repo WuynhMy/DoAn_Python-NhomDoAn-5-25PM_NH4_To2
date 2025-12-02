@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk,messagebox
 from tkcalendar import DateEntry
+from openpyxl import Workbook
+from tkinter import filedialog
 import mysql.connector
 import traceback
 
@@ -15,6 +17,13 @@ def connect_db():
         database="QLBN" 
     )
 root = tk.Tk() 
+def center_window(win, width, height):
+    win.update_idletasks()
+    x = (win.winfo_screenwidth() // 2) - (width // 2)
+    y = (win.winfo_screenheight() // 2) - (height // 2)
+    win.geometry(f"{width}x{height}+{x}+{y}")
+center_window(root, 1000, 800)
+
 # ===== STYLE TỔNG =====
 style = ttk.Style()
 style.theme_use("clam")
@@ -498,7 +507,20 @@ tk.Button(frame_buttons, text="Lưu", width=12, bg="#F5B7B1", command=luu_phongb
 tk.Button(frame_buttons, text="Làm mới", width=12, bg="#D6EAF8", command=clear_pb).grid(row=0, column=3, padx=5)
 load_phongbenh()
 # TAB PHIẾU KHÁM
-frame_info_pk = tk.LabelFrame(tab_phieukham, text="THÔNG TIN BỆNH NHÂN",
+
+frame_tree_pk = ttk.Frame(tab_phieukham)
+frame_tree_pk.pack(fill="both", expand=True, padx=10, pady=5)
+
+columns = ("MaPK","MaBN","MaBS","NgayKham","LoaiKham","ChanDoan","GhiChu")
+tree_pk = ttk.Treeview(frame_tree_pk, columns=columns, show="headings")
+
+for col in columns:
+    tree_pk.heading(col, text=col)
+    tree_pk.column(col, width=120)
+
+tree_pk.pack(fill="both", expand=True)
+
+frame_info_pk = tk.LabelFrame(tab_phieukham, text="THÔNG TIN PHIẾU KHÁM",
                            bg="#EBF5FB", fg="#1B4F72",
                            font=("Arial", 14, "bold"),
                            padx=15, pady=15)
@@ -538,28 +560,8 @@ entry_ghichu = ttk.Entry(frame_info_pk, width=50, style="TEntry")
 entry_ghichu.grid(row=3, column=1, columnspan=3, padx=5, pady=5)
 
 # ===== Bảng =====
-frame_tree_pk = ttk.Frame(tab_phieukham)
-frame_tree_pk.pack(fill="both", expand=True, padx=10, pady=5)
 
-columns = ("MaPK","MaBN","MaBS","NgayKham","LoaiKham","ChanDoan","GhiChu")
-tree_pk = ttk.Treeview(frame_tree_pk, columns=columns, show="headings")
-
-for col in columns:
-    tree_pk.heading(col, text=col)
-    tree_pk.column(col, width=120)
-
-tree_pk.pack(fill="both", expand=True)
-
-frame_table_pk = tk.LabelFrame(
-    tab_phieukham,
-    text="DANH SÁCH PHIẾU KHÁM",
-    bg="#EBF5FB",
-    fg="#1B4F72",
-    font=("Arial", 14, "bold"),
-    padx=10,
-    pady=10
-)
-frame_table_pk.pack(fill="both", expand=True, padx=20, pady=10)
+frame_table.pack(fill="both", expand=True)
 
 columns_pk = ("MaPK", "MaBN", "MaBS", "NgayKham", "LoaiKham", "ChanDoan","GhiChu")
 
@@ -711,6 +713,31 @@ def xoa_phieukham():
     finally:
         conn.close()
         load_phieukham()
+
+def export_excel_phieukham():
+    filepath = filedialog.asksaveasfilename(
+        title="Chọn nơi lưu file Excel",
+        defaultextension=".xlsx",
+        filetypes=[("Excel files", "*.xlsx")]
+    )
+
+    if not filepath:
+        return
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "PhieuKham"
+
+    cols = [tree_pk.heading(col)["text"] for col in tree_pk["columns"]]
+    ws.append(cols)
+
+    for item in tree_pk.get_children():
+        row = tree_pk.item(item)["values"]
+        ws.append(row)
+
+    wb.save(filepath)
+    messagebox.showinfo("Thành công", "Xuất Excel Phiếu Khám thành công!")
+
 #CRUD CHO PHIẾU KHÁM
 frame_buttons = tk.Frame(tab_phieukham)
 frame_buttons.pack(fill="x",pady=5,before=tree_pk)
@@ -720,6 +747,7 @@ tk.Button(frame_buttons, text="Sửa", width=12, bg="#F9E79F", command=sua_phieu
 tk.Button(frame_buttons, text="Lưu", width=12, bg="#F5B7B1", command=luu_phieukham).grid(row=0, column=2, padx=5)
 tk.Button(frame_buttons, text="Làm mới", width=12, bg="#D6EAF8", command=clear_phieukham).grid(row=0, column=3, padx=5)
 tk.Button(frame_buttons, text="Xóa", width=12, bg="#E2122B", command=xoa_phieukham).grid(row=0, column=4, padx=5)
+tk.Button(frame_buttons, text="Xuất Excel",width=12,command=export_excel_phieukham).grid(row=0,column=5,padx=5)
 
 #Tab thuốc
 frame_info_t = tk.LabelFrame(
